@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KStarMusic Store — 종합 프로젝트 대시보드</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #F5F4F0;
+  --surface: #FFFFFF;
+  --surface-alt: #EEEEE8;
+  --text: #1A1A1A;
+  --text-2: #5A5A5A;
+  --text-3: #999;
+  --border: rgba(0,0,0,0.07);
+  --accent: #2563EB;
+  --accent-light: #EFF6FF;
+  --green: #16A34A; --green-bg: #F0FDF4; --green-t: #15803D;
+  --amber: #D97706; --amber-bg: #FFFBEB; --amber-t: #92400E;
+  --red: #DC2626; --red-bg: #FEF2F2; --red-t: #991B1B;
+  --blue-bg: #EFF6FF; --blue-t: #1E40AF;
+  --gray-bg: #F3F4F6; --gray-t: #4B5563;
+  --purple: #7C3AED; --purple-bg: #F5F3FF; --purple-t: #5B21B6;
+  --coral: #EA580C;
+  --teal: #0D9488; --teal-bg: #F0FDFA; --teal-t: #115E59;
+  --r: 10px; --rl: 14px;
+  --shadow: 0 1px 3px rgba(0,0,0,0.05);
+  --mono: 'SF Mono','Cascadia Code','Consolas',monospace;
+}
+@media(prefers-color-scheme:dark){:root{
+  --bg:#0F0F0F;--surface:#1A1A1A;--surface-alt:#242424;--text:#E8E8E8;--text-2:#AAA;--text-3:#666;
+  --border:rgba(255,255,255,0.08);--accent:#60A5FA;--accent-light:#1E3A5F;
+  --green-bg:#052E16;--green-t:#86EFAC;--amber-bg:#422006;--amber-t:#FDE68A;
+  --red-bg:#450A0A;--red-t:#FCA5A5;--blue-bg:#1E3A5F;--blue-t:#93C5FD;
+  --gray-bg:#2A2A2A;--gray-t:#A1A1AA;--purple-bg:#2E1065;--purple-t:#C4B5FD;
+  --teal-bg:#042F2E;--teal-t:#5EEAD4;
+  --shadow:0 1px 3px rgba(0,0,0,0.4);
+}}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Pretendard',-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.55;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1120px;margin:0 auto;padding:2rem 1.5rem 4rem}
+
+/* Header */
+.hdr{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin-bottom:2rem}
+h1{font-size:1.5rem;font-weight:700;letter-spacing:-.03em}
+h1 small{display:block;font-size:.82rem;font-weight:400;color:var(--text-2);margin-top:3px;letter-spacing:0}
+.date-pill{font-size:.75rem;font-weight:500;color:var(--text-2);background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:5px 14px;white-space:nowrap}
+
+/* Metrics */
+.metrics{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px;margin-bottom:2rem}
+.m{background:var(--surface);border-radius:var(--r);padding:.85rem 1rem;border:1px solid var(--border);box-shadow:var(--shadow)}
+.m-l{font-size:.68rem;font-weight:500;color:var(--text-3);text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px}
+.m-v{font-size:1.6rem;font-weight:700;letter-spacing:-.02em}
+.m-s{font-size:.72rem;color:var(--text-2);margin-top:2px}
+
+/* Section */
+.sec{margin-bottom:2rem}
+.sec-h{display:flex;align-items:center;gap:8px;margin-bottom:10px;padding-bottom:7px;border-bottom:1px solid var(--border)}
+.sec-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.sec-t{font-size:.88rem;font-weight:600;letter-spacing:-.01em}
+.sec-r{font-size:.72rem;color:var(--text-3);margin-left:auto}
+
+/* Cards */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:.75rem 1rem;margin-bottom:6px;box-shadow:var(--shadow);transition:box-shadow .15s}
+.card:hover{box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.wp-id{font-size:.73rem;font-weight:600;color:var(--accent);text-decoration:none;white-space:nowrap;font-family:var(--mono)}
+.wp-id:hover{text-decoration:underline}
+.wp-t{font-size:.82rem;font-weight:500;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.badge{font-size:.66rem;font-weight:600;padding:2px 7px;border-radius:5px;white-space:nowrap}
+.b-p{background:var(--blue-bg);color:var(--blue-t)}
+.b-c{background:var(--green-bg);color:var(--green-t)}
+.b-n{background:var(--gray-bg);color:var(--gray-t)}
+.b-r{background:var(--red-bg);color:var(--red-t)}
+.wp-d{font-size:.71rem;color:var(--text-3);white-space:nowrap;font-family:var(--mono)}
+.tag{font-size:.66rem;font-weight:600;padding:2px 7px;border-radius:5px;background:var(--amber-bg);color:var(--amber-t);white-space:nowrap}
+.sub{font-size:.76rem;color:var(--text-2);margin-top:4px;line-height:1.45}
+
+/* Progress bar */
+.prog{display:flex;align-items:center;gap:10px;margin-top:6px}
+.prog-track{flex:1;height:6px;background:var(--surface-alt);border-radius:3px;overflow:hidden}
+.prog-fill{height:100%;border-radius:3px;transition:width .6s ease}
+.prog-label{font-size:.72rem;font-weight:600;color:var(--text-2);min-width:36px;text-align:right}
+
+/* Timeline */
+.tl-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:1.25rem;box-shadow:var(--shadow)}
+.tl-legend{display:flex;gap:14px;font-size:.7rem;color:var(--text-2);margin-bottom:12px;flex-wrap:wrap}
+.tl-legend span{display:flex;align-items:center;gap:4px}
+.tl-lb{width:10px;height:10px;border-radius:3px}
+.tl-row{display:flex;align-items:center;gap:8px;margin-bottom:5px}
+.tl-name{width:110px;font-size:.71rem;font-weight:500;text-align:right;color:var(--text-2);flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tl-track{flex:1;height:24px;background:var(--surface-alt);border-radius:5px;position:relative;overflow:visible}
+.tl-bar{height:100%;border-radius:5px;display:flex;align-items:center;padding:0 7px;font-size:.66rem;font-weight:600;position:absolute;top:0;overflow:hidden;white-space:nowrap}
+.tl-bar.active{background:var(--accent);color:#fff}
+.tl-bar.done{background:var(--green);color:#fff}
+.tl-bar.pending{background:var(--surface-alt);border:1.5px solid var(--border);color:var(--text-3)}
+.tl-bar.rejected{background:var(--red-bg);border:1.5px solid var(--border);color:var(--red-t)}
+.tl-today{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--red);border-radius:1px;z-index:3}
+.tl-today-dot{position:absolute;top:-7px;width:7px;height:7px;border-radius:50%;background:var(--red);transform:translateX(-2.5px)}
+.tl-dates{display:flex;justify-content:space-between;font-size:.66rem;color:var(--text-3);margin-top:6px;padding-left:118px;font-family:var(--mono)}
+
+/* Chart */
+.chart-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:1.25rem;box-shadow:var(--shadow)}
+.chart-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-bottom:12px}
+.chart-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1rem;box-shadow:var(--shadow)}
+.chart-box h3{font-size:.82rem;font-weight:600;margin-bottom:10px}
+
+/* Reason cards */
+.reason{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--coral);border-radius:0 var(--r) var(--r) 0;padding:.75rem 1rem;margin-bottom:6px;box-shadow:var(--shadow)}
+.reason-t{font-size:.8rem;font-weight:600;margin-bottom:3px}
+.reason-d{font-size:.76rem;color:var(--text-2);line-height:1.5}
+
+/* Schedule change table */
+.sch-table{width:100%;border-collapse:collapse;font-size:.78rem}
+.sch-table th{text-align:left;font-weight:500;color:var(--text-3);padding:6px 8px;border-bottom:1px solid var(--border);font-size:.72rem}
+.sch-table td{padding:6px 8px;border-bottom:1px solid var(--border)}
+.sch-table .old{text-decoration:line-through;color:var(--text-3)}
+.sch-table .new{font-weight:600;color:var(--red-t)}
+.sch-arrow{color:var(--text-3);margin:0 4px}
+
+/* Sprint detail */
+.sprint-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:1rem 1.15rem;margin-bottom:10px;box-shadow:var(--shadow)}
+.sprint-head{display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap}
+.sprint-name{font-size:.88rem;font-weight:600;flex:1}
+.sprint-tasks{margin-top:4px}
+.sprint-tasks .card{margin-bottom:4px;padding:.55rem .85rem;border-radius:8px}
+
+/* Footer */
+.footer{text-align:center;font-size:.7rem;color:var(--text-3);margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--border)}
+
+/* Responsive */
+@media(max-width:768px){
+  .metrics{grid-template-columns:repeat(3,1fr)}
+  .chart-grid{grid-template-columns:1fr}
+  .tl-name{width:70px;font-size:.66rem}
+  .tl-dates{padding-left:78px}
+}
+@media(max-width:480px){
+  .metrics{grid-template-columns:repeat(2,1fr)}
+  .wrap{padding:1rem .85rem 3rem}
+}
+@media print{body{background:#fff}.card:hover{box-shadow:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- Back link -->
+<a href="../" style="display:inline-flex;align-items:center;gap:5px;font-size:.8rem;color:var(--text-2);text-decoration:none;margin-bottom:1rem">
+  <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 3L5 8l5 5"/></svg>
+  목록으로 돌아가기
+</a>
+
+<!-- Header -->
+<div class="hdr">
+  <h1>KStarMusic Store<small>종합 프로젝트 진행 현황 대시보드</small></h1>
+  <div class="date-pill">기준일 2026-03-17 (화) · 프로젝트 시작 2026-03-03</div>
+</div>
+
+<!-- ━━━ 1. Overall Metrics ━━━ -->
+<div class="metrics">
+  <div class="m"><div class="m-l">전체 작업</div><div class="m-v">129</div><div class="m-s">Task 97 · Summary 20 · MS 12</div></div>
+  <div class="m"><div class="m-l">완료 (Closed)</div><div class="m-v" style="color:var(--green)">49</div><div class="m-s">전체 대비 38%</div></div>
+  <div class="m"><div class="m-l">진행 중</div><div class="m-v" style="color:var(--accent)">9</div><div class="m-s">P0 포팅 6 + MVP 3</div></div>
+  <div class="m"><div class="m-l">대기 (New)</div><div class="m-v" style="color:var(--text-3)">60</div><div class="m-s">미착수 예정 작업</div></div>
+  <div class="m"><div class="m-l">기각 (Rejected)</div><div class="m-v" style="color:var(--red)">11</div><div class="m-s">W10 백로그 정리</div></div>
+  <div class="m"><div class="m-l">최근 2일 변경</div><div class="m-v" style="color:var(--amber)">53</div><div class="m-s">신규 27 · 수정 17 · 오늘 9</div></div>
+</div>
+
+<!-- ━━━ 2. Status Donut + Weekly Activity ━━━ -->
+<div class="chart-grid">
+  <div class="chart-box">
+    <h3>상태별 분포</h3>
+    <div style="position:relative;height:220px"><canvas id="statusChart"></canvas></div>
+  </div>
+  <div class="chart-box">
+    <h3>주간별 활동량</h3>
+    <div style="position:relative;height:220px"><canvas id="weeklyChart"></canvas></div>
+  </div>
+</div>
+
+<!-- ━━━ 3. Daily Activity ━━━ -->
+<div class="sec" style="margin-top:1.5rem">
+  <div class="sec-h">
+    <div class="sec-dot" style="background:var(--purple)"></div>
+    <div class="sec-t">일자별 작업 활동</div>
+    <div class="sec-r">2026-03-07 ~ 03-17</div>
+  </div>
+  <div class="chart-wrap">
+    <div style="position:relative;height:220px"><canvas id="dailyChart"></canvas></div>
+  </div>
+</div>
+
+<!-- ━━━ 4. Master Timeline ━━━ -->
+<div class="sec">
+  <div class="sec-h">
+    <div class="sec-dot" style="background:var(--accent)"></div>
+    <div class="sec-t">전체 로드맵 타임라인</div>
+    <div class="sec-r">2026-03-03 ~ 04-27</div>
+  </div>
+  <div class="tl-wrap">
+    <div class="tl-legend">
+      <span><span class="tl-lb" style="background:var(--green)"></span>완료</span>
+      <span><span class="tl-lb" style="background:var(--accent)"></span>진행 중</span>
+      <span><span class="tl-lb" style="background:var(--surface-alt);border:1.5px solid var(--border)"></span>예정</span>
+      <span><span class="tl-lb" style="background:var(--red-bg);border:1.5px solid var(--border)"></span>기각</span>
+      <span><span style="width:10px;height:2px;background:var(--red)"></span>오늘</span>
+    </div>
+    <div id="masterTimeline"></div>
+    <div class="tl-dates" id="masterDates"></div>
+  </div>
+</div>
+
+<!-- ━━━ 5. Sprint Progress Overview ━━━ -->
+<div class="sec">
+  <div class="sec-h">
+    <div class="sec-dot" style="background:var(--teal)"></div>
+    <div class="sec-t">스프린트별 진척률</div>
+    <div class="sec-r">8개 스프린트</div>
+  </div>
+  <div id="sprintProgress"></div>
+</div>
+
+<!-- ━━━ 6. Schedule Changes ━━━ -->
+<div class="sec">
+  <div class="sec-h">
+    <div class="sec-dot" style="background:var(--amber)"></div>
+    <div class="sec-t">일정 변경 이력</div>
+    <div class="sec-r">3/16~17 변경 7건</div>
+  </div>
+  <div class="card" style="padding:0;overflow-x:auto">
+    <table class="sch-table">
+      <thead><tr><th>WP</th><th>작업</th><th>변경 전</th><th></th><th>변경 후</th><th>사유</th></tr></thead>
+      <tbody id="scheduleTable"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ━━━ 7. Delay Reasons ━━━ -->
+<div class="sec">
+  <div class="sec-h">
+    <div class="sec-dot" style="background:var(--red)"></div>
+    <div class="sec-t">지연 핵심 사유</div>
+  </div>
+  <div class="reason"><div class="reason-t">완료 기준 강화 → 엄격 패리티 (PORTING-PARITY-STANDARD)</div><div class="reason-d">기능 동작 기준에서 원본 관리자 체감(메뉴/레이아웃/브레드크럼/버튼/탭/필터/표 컬럼/동선) 일치 기준으로 변경. 전체 1,111 surfaces 중 감사 완료 70개(6.3%).</div></div>
+  <div class="reason"><div class="reason-t">Phase 2 상품 관리 → partial 판정 유지</div><div class="reason-d">조회수 source 미일치, 상단 우측 버튼 위치, 하단 일괄수정 탭 배치, 행 액션/컬럼 배치 차이.</div></div>
+  <div class="reason"><div class="reason-t">Phase 1 주문/배송 → 재감사 돌입</div><div class="reason-d">기존 Closed에서 새 패리티 기준 적용으로 재오픈. 세부 탭/버튼/필터/표 컬럼 전수 비교 잔여.</div></div>
+  <div class="reason"><div class="reason-t">MVP 범위 확대 (웹 → 웹 + 앱)</div><div class="reason-d">Expo 빌드 + Google Play / App Store 심사 대응 2주 추가 → 전체 목표 4/13 → 4/27.</div></div>
+</div>
+
+<!-- ━━━ 8. Current In-Progress ━━━ -->
+<div class="sec">
+  <div class="sec-h">
+    <div class="sec-dot" style="background:var(--accent)"></div>
+    <div class="sec-t">현재 진행 중인 작업</div>
+    <div class="sec-r">9건</div>
+  </div>
+  <div id="inProgressList"></div>
+</div>
+
+<!-- ━━━ 9. Recently Completed ━━━ -->
+<div class="sec">
+  <div class="sec-h">
+    <div class="sec-dot" style="background:var(--green)"></div>
+    <div class="sec-t">최근 완료된 작업 (3/16~17)</div>
+  </div>
+  <div id="recentClosed"></div>
+</div>
+
+<!-- ━━━ 10. Sprint Details ━━━ -->
+<div class="sec">
+  <div class="sec-h">
+    <div class="sec-dot" style="background:var(--purple)"></div>
+    <div class="sec-t">스프린트별 상세 현황</div>
+  </div>
+  <div id="sprintDetails"></div>
+</div>
+
+<!-- Footer -->
+<div class="footer">KStarMusic Store 종합 프로젝트 대시보드 · OpenProject API 기반 자동 생성 · 2026-03-17</div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+const B = 'https://project.kstarmusic.com/work_packages/';
+const isDark = matchMedia('(prefers-color-scheme:dark)').matches;
+
+// ── Charts ──
+// Status donut
+new Chart(document.getElementById('statusChart'), {
+  type: 'doughnut',
+  data: {
+    labels: ['완료 (49)', '진행 중 (9)', '대기 (60)', '기각 (11)'],
+    datasets: [{
+      data: [49, 9, 60, 11],
+      backgroundColor: ['#16A34A','#2563EB','#9CA3AF','#DC2626'],
+      borderWidth: 0,
+      borderRadius: 3,
+      spacing: 2
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    cutout: '62%',
+    plugins: {
+      legend: { position:'bottom', labels:{ padding:12, usePointStyle:true, pointStyle:'rectRounded', font:{size:11, family:'Pretendard'}, color: isDark?'#AAA':'#666' }},
+    }
+  }
+});
+
+// Weekly activity
+new Chart(document.getElementById('weeklyChart'), {
+  type: 'bar',
+  data: {
+    labels: ['W10\n(03.03~09)', 'W11\n(03.10~16)', 'W12\n(03.17~현재)'],
+    datasets: [
+      { label:'생성', data:[100,29,0], backgroundColor:'#60A5FA', borderRadius:4 },
+      { label:'수정', data:[76,44,9], backgroundColor:'#FBBF24', borderRadius:4 },
+      { label:'완료', data:[44,5,0], backgroundColor:'#34D399', borderRadius:4 },
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      x: { grid:{display:false}, ticks:{font:{size:10, family:'Pretendard'}, color:isDark?'#888':'#888'} },
+      y: { grid:{color:isDark?'rgba(255,255,255,.06)':'rgba(0,0,0,.05)'}, ticks:{font:{size:10}, color:isDark?'#888':'#888'} }
+    },
+    plugins: {
+      legend: { position:'top', labels:{padding:10, usePointStyle:true, pointStyle:'rectRounded', font:{size:10,family:'Pretendard'}, color:isDark?'#AAA':'#666'} }
+    }
+  }
+});
+
+// Daily activity
+new Chart(document.getElementById('dailyChart'), {
+  type: 'line',
+  data: {
+    labels: ['3/7','3/8','3/9','3/10','3/11','3/12','3/13','3/14','3/15','3/16','3/17'],
+    datasets: [
+      { label:'생성', data:[9,0,91,0,0,0,0,0,0,29,0], borderColor:'#60A5FA', backgroundColor:'rgba(96,165,250,.1)', fill:true, tension:.3, pointRadius:3, borderWidth:2 },
+      { label:'수정', data:[8,0,68,0,0,0,0,0,0,44,9], borderColor:'#FBBF24', backgroundColor:'rgba(251,191,36,.1)', fill:true, tension:.3, pointRadius:3, borderWidth:2 },
+      { label:'완료', data:[8,0,36,0,0,0,0,0,0,5,0], borderColor:'#34D399', backgroundColor:'rgba(52,211,153,.1)', fill:true, tension:.3, pointRadius:3, borderWidth:2 },
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      x: { grid:{display:false}, ticks:{font:{size:10,family:'Pretendard'},color:isDark?'#888':'#888'} },
+      y: { grid:{color:isDark?'rgba(255,255,255,.06)':'rgba(0,0,0,.05)'}, ticks:{font:{size:10},color:isDark?'#888':'#888'} }
+    },
+    plugins: { legend:{ position:'top', labels:{padding:10,usePointStyle:true,pointStyle:'circle',font:{size:10,family:'Pretendard'},color:isDark?'#AAA':'#666'} } },
+    interaction: { mode:'index', intersect:false }
+  }
+});
+
+// ── Master Timeline ──
+const allSprints = [
+  {id:38,label:'03/07 레거시',start:'2026-03-07',end:'2026-03-09',st:'done'},
+  {id:39,label:'03/08 카드통합',start:'2026-03-08',end:'2026-03-09',st:'done'},
+  {id:47,label:'W10 Sprint',start:'2026-03-03',end:'2026-03-09',st:'done'},
+  {id:126,label:'P0 포팅',start:'2026-03-10',end:'2026-03-30',st:'active'},
+  {id:138,label:'MVP 마스터',start:'2026-03-16',end:'2026-04-27',st:'active'},
+  {id:95,label:'W11 Quick wins',start:'2026-03-17',end:'2026-03-31',st:'pending'},
+  {id:106,label:'W12 ACL+정산',start:'2026-03-24',end:'2026-03-30',st:'pending'},
+  {id:115,label:'W13 알림+i18n',start:'2026-03-30',end:'2026-03-31',st:'pending'},
+];
+const TLS=new Date('2026-03-03'),TLE=new Date('2026-04-27'),TLD=(TLE-TLS)/864e5;
+function pct(d){return Math.max(0,Math.min(100,((new Date(d)-TLS)/864e5)/TLD*100))}
+const mtl=document.getElementById('masterTimeline');
+// today line
+const todayR=document.createElement('div');todayR.className='tl-row';
+todayR.innerHTML=`<span class="tl-name"></span><div class="tl-track" style="background:transparent;overflow:visible"><div class="tl-today" style="left:${pct('2026-03-17')}%"><div class="tl-today-dot"></div></div></div>`;
+mtl.appendChild(todayR);
+allSprints.forEach(s=>{
+  const l=pct(s.start),r=pct(s.end),w=Math.max(r-l,2);
+  const d=document.createElement('div');d.className='tl-row';
+  d.innerHTML=`<span class="tl-name">${s.label}</span><div class="tl-track"><div class="tl-bar ${s.st}" style="left:${l}%;width:${w}%">${s.label}</div></div>`;
+  mtl.appendChild(d);
+});
+document.getElementById('masterDates').innerHTML='<span>03/03</span><span>03/16</span><span>03/30</span><span>04/13</span><span>04/27</span>';
+
+// ── Sprint Progress ──
+const sprintData=[
+  {id:38,name:'03/07 레거시 정리',date:'03/07~09',total:5,closed:5,progress:0,st:'done'},
+  {id:39,name:'03/08 상품 카드 통합',date:'03/08~09',total:2,closed:2,progress:0,st:'done'},
+  {id:47,name:'Sprint W10 (03.03~09)',date:'03/03~09',total:41,closed:31,progress:0,rejected:10,st:'done'},
+  {id:126,name:'P0: 백오피스 포팅',date:'03/10~30',total:9,closed:1,progress:6,st:'active'},
+  {id:138,name:'MVP 출시 일정 (→04/27)',date:'03/16~04/27',total:22,closed:2,progress:1,st:'active'},
+  {id:95,name:'W11: Quick wins + 결제',date:'03/17~31',total:11,closed:0,progress:0,st:'pending'},
+  {id:106,name:'W12: ACL + 정산 컷오버',date:'03/24~30',total:9,closed:0,progress:0,st:'pending'},
+  {id:115,name:'W13: 알림 + i18n + UX',date:'03/30~31',total:9,closed:0,progress:0,st:'pending'},
+];
+const sp=document.getElementById('sprintProgress');
+sprintData.forEach(s=>{
+  const pctVal=s.total>0?Math.round(s.closed/s.total*100):0;
+  const color=s.st==='done'?'var(--green)':s.st==='active'?'var(--accent)':'var(--text-3)';
+  const badge=s.st==='done'?'<span class="badge b-c">완료</span>':s.st==='active'?'<span class="badge b-p">진행 중</span>':'<span class="badge b-n">예정</span>';
+  const rejTxt=s.rejected?` · 기각 ${s.rejected}`:'';
+  sp.innerHTML+=`
+    <div class="card">
+      <div class="row">
+        <a class="wp-id" href="${B}${s.id}" target="_blank">#${s.id}</a>
+        <span class="wp-t">${s.name}</span>
+        ${badge}
+        <span class="wp-d">${s.date}</span>
+      </div>
+      <div class="prog">
+        <div class="prog-track"><div class="prog-fill" style="width:${pctVal}%;background:${color}"></div></div>
+        <div class="prog-label" style="color:${color}">${pctVal}%</div>
+      </div>
+      <div class="sub">전체 ${s.total}건 · 완료 ${s.closed} · 진행 ${s.progress}${rejTxt}</div>
+    </div>`;
+});
+
+// ── Schedule Changes ──
+const changes=[
+  {id:138,name:'MVP 마스터 일정',before:'04/13',after:'04/27',reason:'앱 출시(Expo+스토어) 범위 추가'},
+  {id:126,name:'P0 백오피스 포팅',before:'03/16',after:'03/30',reason:'엄격 패리티(PORTING-PARITY) 기준 적용'},
+  {id:129,name:'상품 관리 화면 포팅',before:'03/16',after:'03/23',reason:'product_list partial 판정'},
+  {id:128,name:'DB 스키마/API 매핑',before:'03/16',after:'03/30',reason:'패리티 기준 적용'},
+  {id:131,name:'회원 관리 + 정산',before:'03/16',after:'03/30',reason:'Phase 3 gap (restock, review_config)'},
+  {id:133,name:'설정/환경 관리',before:'03/16',after:'03/30',reason:'패리티 기준 적용'},
+  {id:134,name:'통합 테스트 + 검증',before:'03/16',after:'03/30',reason:'패리티 기준 적용'},
+];
+const st=document.getElementById('scheduleTable');
+changes.forEach(c=>{
+  st.innerHTML+=`<tr><td><a class="wp-id" href="${B}${c.id}" target="_blank">#${c.id}</a></td><td>${c.name}</td><td class="old">${c.before}</td><td class="sch-arrow">→</td><td class="new">${c.after}</td><td style="font-size:.73rem;color:var(--text-2)">${c.reason}</td></tr>`;
+});
+
+// ── In Progress ──
+const inProgress=[
+  {id:129,t:'상품 관리 화면 포팅 (목록/등록/수정/삭제)',d:'03/10~03/23',p:'P0',note:'product_list partial — 조회수, 버튼 위치, 일괄수정 탭 차이'},
+  {id:128,t:'DB 스키마/API 매핑 설계',d:'03/10~03/30',p:'P0',note:'Phase 0~7 전체 대상 설계'},
+  {id:130,t:'주문/배송 관리 화면 포팅',d:'03/10~03/16',p:'P0',note:'엄격 패리티 재감사 진행 중'},
+  {id:131,t:'회원 관리 + 정산 화면 포팅',d:'03/10~03/30',p:'P0',note:'Phase 3 gap: restock partial, review_config missing'},
+  {id:133,t:'설정/환경 관리 포팅',d:'03/10~03/30',p:'P0',note:'메뉴명/브레드크럼/설정 묶음 패리티 확인 중'},
+  {id:134,t:'포팅 통합 테스트 + 데이터 검증',d:'03/10~03/30',p:'P0',note:'agent-browser E2E + 스크린샷 확보 기준'},
+  {id:126,t:'Sprint P0: 뮤직플랜트 백오피스 포팅',d:'03/10~03/30',p:'마스터',note:'하위 7건 중 완료 1, Closed 1, 진행 5'},
+  {id:139,t:'Sprint MVP-1: Phase 2 핵심 마감',d:'03/16~03/23',p:'MVP',note:'하위 2건 완료 — 이번 주 마감 목표'},
+  {id:138,t:'쇼핑몰 MVP 마스터 일정',d:'03/16~04/27',p:'MVP',note:'6개 스프린트, 최종 목표 앱 출시'},
+];
+const ipl=document.getElementById('inProgressList');
+inProgress.forEach(i=>{
+  ipl.innerHTML+=`<div class="card"><div class="row"><a class="wp-id" href="${B}${i.id}" target="_blank">#${i.id}</a><span class="wp-t">${i.t}</span><span class="badge b-p">In progress</span><span class="tag">${i.p}</span><span class="wp-d">${i.d}</span></div><div class="sub">${i.note}</div></div>`;
+});
+
+// ── Recent Closed ──
+const recentClosed=[
+  {id:140,t:'Phase 2 상품 편집 메타데이터 통합 마감',d:'03/16',note:'어제 생성 → 당일 완료 (07:10)'},
+  {id:141,t:'Phase 2 업로드/가격 이력/브라우저 E2E 닫기',d:'03/16',note:'어제 생성 → 당일 완료 (08:30)'},
+  {id:127,t:'뮤직플랜트 백오피스 현행 분석 및 기능 목록 정리',d:'03/16',note:'P0 초기 분석 완료'},
+  {id:46,t:'검색 아티스트 필터 추가 및 스포트라이트 링크 개선',d:'03/16',note:'상태 정리'},
+];
+const rcl=document.getElementById('recentClosed');
+recentClosed.forEach(i=>{
+  rcl.innerHTML+=`<div class="card"><div class="row"><a class="wp-id" href="${B}${i.id}" target="_blank">#${i.id}</a><span class="wp-t">${i.t}</span><span class="badge b-c">Closed</span><span class="wp-d">${i.d}</span></div><div class="sub">${i.note}</div></div>`;
+});
+
+// ── Sprint Details ──
+const sprintDetails = [
+  {id:126,name:'Sprint P0: 뮤직플랜트 백오피스 포팅',date:'03/10~03/30',st:'active',
+    tasks:[
+      {id:127,t:'현행 분석 및 기능 목록 정리',s:'b-c',sl:'Closed',d:'03/10~16'},
+      {id:128,t:'DB 스키마/API 매핑 설계',s:'b-p',sl:'In progress',d:'03/10~30',tag:'3/16→3/30'},
+      {id:129,t:'상품 관리 화면 포팅',s:'b-p',sl:'In progress',d:'03/10~23',tag:'3/16→3/23'},
+      {id:130,t:'주문/배송 관리 화면 포팅',s:'b-p',sl:'In progress',d:'03/10~16'},
+      {id:131,t:'회원 관리 + 정산 화면 포팅',s:'b-p',sl:'In progress',d:'03/10~30',tag:'3/16→3/30'},
+      {id:132,t:'콘텐츠/배너/이벤트 관리 포팅',s:'b-n',sl:'New',d:'03/10~16'},
+      {id:133,t:'설정/환경 관리 포팅',s:'b-p',sl:'In progress',d:'03/10~30',tag:'3/16→3/30'},
+      {id:134,t:'포팅 통합 테스트 + 데이터 검증',s:'b-p',sl:'In progress',d:'03/10~30',tag:'3/16→3/30'},
+    ]},
+  {id:138,name:'쇼핑몰 MVP + 운영/앱 출시',date:'03/16~04/27',st:'active',
+    sub:[
+      {sprint:'MVP-1 (03/16~23)',tasks:[
+        {id:140,t:'Phase 2 상품 편집 메타데이터 통합',s:'b-c',sl:'Closed',d:'03/16~23'},
+        {id:141,t:'Phase 2 업로드/가격 이력/E2E',s:'b-c',sl:'Closed',d:'03/16~23'},
+      ]},
+      {sprint:'MVP-2 (03/23~30)',tasks:[
+        {id:144,t:'Phase 2 재감사 + 상품 운영 회귀',s:'b-n',sl:'New',d:'03/23~30'},
+        {id:145,t:'Phase 3 최소 오픈 범위',s:'b-n',sl:'New',d:'03/23~30'},
+      ]},
+      {sprint:'MVP-3 (03/30~04/06)',tasks:[
+        {id:148,t:'데이터 컷오버 전략 + 리허설',s:'b-n',sl:'New',d:'03/30~04/06'},
+        {id:149,t:'운영 blocker 정리',s:'b-n',sl:'New',d:'03/30~04/06'},
+        {id:156,t:'Dragonfly 캐시/세션 전략',s:'b-n',sl:'New',d:'03/30~04/06'},
+      ]},
+      {sprint:'MVP-4 (04/06~13)',tasks:[
+        {id:152,t:'UAT + 결함 수정',s:'b-n',sl:'New',d:'04/06~13'},
+        {id:153,t:'오픈 프리즈 + 롤백 계획',s:'b-n',sl:'New',d:'04/06~13'},
+        {id:157,t:'Expo + EAS 빌드 파이프라인',s:'b-n',sl:'New',d:'04/06~13'},
+      ]},
+      {sprint:'MVP-5 (04/13~20)',tasks:[
+        {id:159,t:'Expo/EAS 빌드 안정화',s:'b-n',sl:'New',d:'04/13~20'},
+        {id:160,t:'스토어 메타데이터 + 심사 제출',s:'b-n',sl:'New',d:'04/13~20'},
+      ]},
+      {sprint:'MVP-6 (04/20~27)',tasks:[
+        {id:163,t:'스토어 심사 대응 + 수정',s:'b-n',sl:'New',d:'04/20~27'},
+        {id:164,t:'Dragonfly 운영 + 최종 배포',s:'b-n',sl:'New',d:'04/20~27'},
+      ]},
+    ]},
+  {id:95,name:'Sprint W11: Quick wins + 결제/환불',date:'03/17~31',st:'pending',
+    tasks:[
+      {id:96,t:'S3 호환 드라이버 스모크 테스트',s:'b-n',sl:'New',d:'03/17~23'},
+      {id:97,t:'상품 대시보드 경로 계약 테스트',s:'b-n',sl:'New',d:'03/17~23'},
+      {id:98,t:'문서 가드레일 CI 연동',s:'b-n',sl:'New',d:'03/17~23'},
+      {id:99,t:'프로필 사진 업로드 실구현',s:'b-n',sl:'New',d:'03/17~23'},
+      {id:102,t:'PG 환불 API 실구현 (NicePay)',s:'b-n',sl:'New',d:'03/30~31'},
+      {id:103,t:'주문 상태 계약 테스트 + 재결제',s:'b-n',sl:'New',d:'03/17~23'},
+      {id:105,t:'인앱 알림 V1 후속',s:'b-n',sl:'New',d:'03/17~23'},
+    ]},
+  {id:106,name:'Sprint W12: ACL 완성 + 정산 컷오버',date:'03/24~30',st:'pending',
+    tasks:[
+      {id:107,t:'ACL 2단계: 메뉴↔API 동기화',s:'b-n',sl:'New',d:'03/24~30'},
+      {id:112,t:'정산/회계 v2: DB 백업 + 마이그레이션',s:'b-n',sl:'New',d:'03/24~30'},
+      {id:113,t:'정산/회계 v2: 리포트 검증 + 경보',s:'b-n',sl:'New',d:'03/24~30'},
+      {id:114,t:'E2E 게이트 전수 + ACL 매트릭스',s:'b-n',sl:'New',d:'03/24~30'},
+    ]},
+  {id:115,name:'Sprint W13: 알림 실연동 + i18n + UX',date:'03/30~31',st:'pending',
+    tasks:[
+      {id:116,t:'알림 실연동: SMTP + SMS',s:'b-n',sl:'New',d:'03/30~31'},
+      {id:117,t:'알림 실연동: FCM/APNs + 카카오',s:'b-n',sl:'New',d:'03/30~31'},
+      {id:118,t:'i18n: ja/zh-CN/zh-TW 번역',s:'b-n',sl:'New',d:'03/30~31'},
+      {id:121,t:'고객 SEO: 메타데이터 정책',s:'b-n',sl:'New',d:'03/30~31'},
+    ]},
+];
+
+const sd=document.getElementById('sprintDetails');
+sprintDetails.forEach(sp=>{
+  const badge=sp.st==='active'?'<span class="badge b-p">진행 중</span>':sp.st==='done'?'<span class="badge b-c">완료</span>':'<span class="badge b-n">예정</span>';
+  let tasksHtml='';
+  if(sp.tasks){
+    sp.tasks.forEach(t=>{
+      const tg=t.tag?`<span class="tag">${t.tag}</span>`:'';
+      tasksHtml+=`<div class="card"><div class="row"><a class="wp-id" href="${B}${t.id}" target="_blank">#${t.id}</a><span class="wp-t">${t.t}</span><span class="badge ${t.s}">${t.sl}</span><span class="wp-d">${t.d}</span>${tg}</div></div>`;
+    });
+  }
+  if(sp.sub){
+    sp.sub.forEach(sub=>{
+      tasksHtml+=`<div style="font-size:.76rem;font-weight:600;color:var(--text-2);margin:8px 0 4px;padding-left:4px">${sub.sprint}</div>`;
+      sub.tasks.forEach(t=>{
+        const tg=t.tag?`<span class="tag">${t.tag}</span>`:'';
+        tasksHtml+=`<div class="card"><div class="row"><a class="wp-id" href="${B}${t.id}" target="_blank">#${t.id}</a><span class="wp-t">${t.t}</span><span class="badge ${t.s}">${t.sl}</span><span class="wp-d">${t.d}</span>${tg}</div></div>`;
+      });
+    });
+  }
+  sd.innerHTML+=`<div class="sprint-card"><div class="sprint-head"><a class="wp-id" href="${B}${sp.id}" target="_blank">#${sp.id}</a><span class="sprint-name">${sp.name}</span>${badge}<span class="wp-d">${sp.date}</span></div><div class="sprint-tasks">${tasksHtml}</div></div>`;
+});
+</script>
+</body>
+</html>
