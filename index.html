@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KStarMusic Store — 프로젝트 대시보드 (2026-03-17)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #F7F6F3;
+  --surface: #FFFFFF;
+  --surface-alt: #EFEEE9;
+  --text: #1A1A1A;
+  --text-secondary: #6B6B6B;
+  --text-tertiary: #9B9B9B;
+  --border: rgba(0,0,0,0.08);
+  --accent: #2563EB;
+  --accent-light: #EFF6FF;
+  --green: #16A34A;
+  --green-bg: #F0FDF4;
+  --green-text: #15803D;
+  --amber: #D97706;
+  --amber-bg: #FFFBEB;
+  --amber-text: #92400E;
+  --red: #DC2626;
+  --red-bg: #FEF2F2;
+  --red-text: #991B1B;
+  --blue-bg: #EFF6FF;
+  --blue-text: #1E40AF;
+  --gray-bg: #F3F4F6;
+  --gray-text: #4B5563;
+  --purple: #7C3AED;
+  --purple-bg: #F5F3FF;
+  --purple-text: #5B21B6;
+  --coral: #EA580C;
+  --radius: 10px;
+  --radius-lg: 14px;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
+  --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #111111;
+    --surface: #1A1A1A;
+    --surface-alt: #222222;
+    --text: #E8E8E8;
+    --text-secondary: #999999;
+    --text-tertiary: #666666;
+    --border: rgba(255,255,255,0.08);
+    --accent: #60A5FA;
+    --accent-light: #1E3A5F;
+    --green-bg: #052E16;
+    --green-text: #86EFAC;
+    --amber-bg: #422006;
+    --amber-text: #FDE68A;
+    --red-bg: #450A0A;
+    --red-text: #FCA5A5;
+    --blue-bg: #1E3A5F;
+    --blue-text: #93C5FD;
+    --gray-bg: #2A2A2A;
+    --gray-text: #A1A1AA;
+    --purple-bg: #2E1065;
+    --purple-text: #C4B5FD;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
+    --shadow: 0 1px 3px rgba(0,0,0,0.4), 0 1px 2px rgba(0,0,0,0.3);
+  }
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+.container {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 4rem;
+}
+
+header {
+  margin-bottom: 2.5rem;
+}
+
+.header-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+h1 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.3;
+}
+
+h1 span {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: var(--text-secondary);
+  margin-top: 4px;
+  letter-spacing: 0;
+}
+
+.date-badge {
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 6px 14px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* Metrics */
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 2rem;
+}
+
+.metric {
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 1rem 1.15rem;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+}
+
+.metric-label {
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 6px;
+}
+
+.metric-value {
+  font-size: 1.7rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+.metric-sub {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+/* Sections */
+.section {
+  margin-bottom: 2rem;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+.section-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.section-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.section-count {
+  font-size: 0.72rem;
+  color: var(--text-tertiary);
+  margin-left: auto;
+}
+
+/* Cards */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.85rem 1rem;
+  margin-bottom: 8px;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.15s;
+}
+
+.card:hover {
+  box-shadow: var(--shadow);
+}
+
+.card-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.wp-id {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--accent);
+  text-decoration: none;
+  white-space: nowrap;
+  font-family: 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
+}
+
+.wp-id:hover { text-decoration: underline; }
+
+.wp-title {
+  font-size: 0.85rem;
+  font-weight: 500;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.badge {
+  font-size: 0.68rem;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 6px;
+  white-space: nowrap;
+  letter-spacing: 0.01em;
+}
+
+.b-progress { background: var(--blue-bg); color: var(--blue-text); }
+.b-closed { background: var(--green-bg); color: var(--green-text); }
+.b-new { background: var(--gray-bg); color: var(--gray-text); }
+.b-rejected { background: var(--red-bg); color: var(--red-text); }
+
+.wp-date {
+  font-size: 0.73rem;
+  color: var(--text-tertiary);
+  white-space: nowrap;
+  font-family: 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
+}
+
+.change-tag {
+  font-size: 0.68rem;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 6px;
+  background: var(--amber-bg);
+  color: var(--amber-text);
+  white-space: nowrap;
+}
+
+.card-sub {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  margin-top: 5px;
+  line-height: 1.45;
+}
+
+/* Timeline */
+.timeline-wrap {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 8px;
+}
+
+.tl-legend {
+  display: flex;
+  gap: 16px;
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+  margin-bottom: 14px;
+}
+
+.tl-legend span {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.tl-legend-box {
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+}
+
+.tl-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.tl-label {
+  width: 56px;
+  font-size: 0.73rem;
+  font-weight: 600;
+  text-align: right;
+  color: var(--text-secondary);
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.tl-track {
+  flex: 1;
+  height: 26px;
+  background: var(--surface-alt);
+  border-radius: 6px;
+  position: relative;
+  overflow: visible;
+}
+
+.tl-bar {
+  height: 100%;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+  font-size: 0.68rem;
+  font-weight: 600;
+  position: absolute;
+  top: 0;
+  transition: opacity 0.2s;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.tl-bar.active {
+  background: var(--accent);
+  color: #fff;
+}
+
+.tl-bar.pending {
+  background: var(--surface-alt);
+  border: 1.5px solid var(--border);
+  color: var(--text-secondary);
+}
+
+.tl-today-line {
+  position: absolute;
+  top: -4px;
+  bottom: -4px;
+  width: 2px;
+  background: var(--red);
+  border-radius: 1px;
+  z-index: 3;
+}
+
+.tl-today-dot {
+  position: absolute;
+  top: -8px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--red);
+  transform: translateX(-3px);
+}
+
+.tl-dates {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.68rem;
+  color: var(--text-tertiary);
+  margin-top: 8px;
+  padding: 0 0 0 66px;
+  font-family: 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
+}
+
+/* Audit progress */
+.audit-bar-wrap {
+  margin-top: 10px;
+}
+
+.audit-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.73rem;
+  color: var(--text-secondary);
+  margin-bottom: 4px;
+}
+
+.audit-track {
+  height: 8px;
+  background: var(--surface-alt);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.audit-fill {
+  height: 100%;
+  border-radius: 4px;
+  background: var(--accent);
+  transition: width 0.8s ease;
+}
+
+/* Delay reasons */
+.reason-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--coral);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  padding: 0.85rem 1rem;
+  margin-bottom: 8px;
+  box-shadow: var(--shadow-sm);
+}
+
+.reason-title {
+  font-size: 0.82rem;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.reason-desc {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+/* Footer */
+.footer {
+  text-align: center;
+  font-size: 0.72rem;
+  color: var(--text-tertiary);
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .metrics { grid-template-columns: repeat(2, 1fr); }
+  h1 { font-size: 1.3rem; }
+  .container { padding: 1.25rem 1rem 3rem; }
+  .tl-label { width: 44px; font-size: 0.68rem; }
+  .tl-dates { padding-left: 54px; }
+}
+
+/* Print */
+@media print {
+  body { background: #fff; }
+  .card:hover { box-shadow: none; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<header>
+  <div class="header-top">
+    <h1>KStarMusic Store<span>프로젝트 진행 현황 대시보드</span></h1>
+    <div class="date-badge">기준일: 2026년 3월 17일 (화)</div>
+  </div>
+</header>
+
+<!-- Metrics -->
+<div class="metrics">
+  <div class="metric">
+    <div class="metric-label">전체 작업</div>
+    <div class="metric-value">129</div>
+    <div class="metric-sub">7 Summary · 9 Milestone · 113 Task</div>
+  </div>
+  <div class="metric">
+    <div class="metric-label">진행 중</div>
+    <div class="metric-value" style="color:var(--accent)">9</div>
+    <div class="metric-sub">P0 포팅 6 + MVP-1 스프린트 3</div>
+  </div>
+  <div class="metric">
+    <div class="metric-label">완료</div>
+    <div class="metric-value" style="color:var(--green)">4</div>
+    <div class="metric-sub">#127 #130 #140 #141</div>
+  </div>
+  <div class="metric">
+    <div class="metric-label">어제~오늘 변경</div>
+    <div class="metric-value" style="color:var(--amber)">53</div>
+    <div class="metric-sub">신규 27 · 기존수정 17 · 오늘 9</div>
+  </div>
+</div>
+
+<!-- Timeline -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-dot" style="background:var(--accent)"></div>
+    <div class="section-title">MVP 출시 로드맵 타임라인</div>
+    <div class="section-count">목표: 2026-04-27</div>
+  </div>
+  <div class="timeline-wrap">
+    <div class="tl-legend">
+      <span><span class="tl-legend-box" style="background:var(--accent)"></span>진행 중</span>
+      <span><span class="tl-legend-box" style="background:var(--surface-alt);border:1.5px solid var(--border)"></span>예정</span>
+      <span><span style="width:10px;height:3px;border-radius:1px;background:var(--red)"></span>오늘 (3/17)</span>
+    </div>
+    <div id="timeline"></div>
+    <div class="tl-dates">
+      <span>03/16</span><span>03/30</span><span>04/13</span><span>04/27</span>
+    </div>
+  </div>
+
+  <div class="audit-bar-wrap" style="margin-top:14px">
+    <div class="audit-label">
+      <span>엄격 패리티 감사 진행률</span>
+      <span style="font-weight:600">70 / 1,111 surfaces (6.3%)</span>
+    </div>
+    <div class="audit-track">
+      <div class="audit-fill" style="width:6.3%"></div>
+    </div>
+  </div>
+</div>
+
+<!-- 현재 진행 스프린트 -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-dot" style="background:var(--accent)"></div>
+    <div class="section-title">현재 진행 중인 스프린트</div>
+    <div class="section-count">2건</div>
+  </div>
+
+  <div class="card">
+    <div class="card-row">
+      <a class="wp-id" href="https://project.kstarmusic.com/work_packages/139" target="_blank">#139</a>
+      <span class="wp-title">Sprint MVP-1: Phase 2 핵심 마감</span>
+      <span class="badge b-progress">In progress</span>
+      <span class="wp-date">03/16 → 03/23</span>
+    </div>
+    <div class="card-sub">하위 2건 모두 완료 (#140 Closed, #141 Closed) — 이번 주 마감 목표</div>
+  </div>
+
+  <div class="card">
+    <div class="card-row">
+      <a class="wp-id" href="https://project.kstarmusic.com/work_packages/126" target="_blank">#126</a>
+      <span class="wp-title">Sprint P0: 뮤직플랜트 백오피스 포팅</span>
+      <span class="badge b-progress">In progress</span>
+      <span class="wp-date">03/10 → 03/30</span>
+      <span class="change-tag">+2주 연장</span>
+    </div>
+    <div class="card-sub">하위 7건 중 완료 2건(#127, #130), 진행 중 5건 — 감사 대상 1,041건 잔여</div>
+  </div>
+</div>
+
+<!-- 백오피스 포팅 상세 -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-dot" style="background:var(--green)"></div>
+    <div class="section-title">백오피스 포팅 (P0) 상세</div>
+    <div class="section-count">7건</div>
+  </div>
+
+  <div class="card">
+    <div class="card-row">
+      <a class="wp-id" href="https://project.kstarmusic.com/work_packages/127" target="_blank">#127</a>
+      <span class="wp-title">현행 분석 및 기능 목록 정리</span>
+      <span class="badge b-closed">Closed</span>
+      <span class="wp-date">03/10 → 03/16</span>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-row">
+      <a class="wp-id" href="https://project.kstarmusic.com/work_packages/130" target="_blank">#130</a>
+      <span class="wp-title">주문/배송 관리 화면 포팅</span>
+      <span class="badge b-closed">Closed</span>
+      <span class="wp-date">03/10 → 03/16</span>
+    </div>
+    <div class="card-sub">엄격 패리티 재감사 진행 중 — 세부 탭/버튼/필터 전수 비교 잔여</div>
+  </div>
+  <div class="card">
+    <div class="card-row">
+      <a class="wp-id" href="https://project.kstarmusic.com/work_packages/129" target="_blank">#129</a>
+      <span class="wp-title">상품 관리 화면 포팅 (목록/등록/수정/삭제)</span>
+      <span class="badge b-progress">In progress</span>
+      <span class="wp-date">03/10 → 03/23</span>
+      <span class="change-tag">3/16→3/23</span>
+    </div>
+    <div class="card-sub">product_list 여전히 partial — 조회수 source, 버튼 위치, 일괄수정 탭 배치 차이</div>
+  </div>
+  <div class="card">
+    <div class="card-row">
+      <a class="wp-id" href="https://project.kstarmusic.com/work_packages/128" target="_blank">#128</a>
+      <span class="wp-title">DB 스키마/API 매핑 설계</span>
+      <span class="badge b-progress">In progress</span>
+      <span class="wp-date">03/10 → 03/30</span>
+      <span class="change-tag">3/16→3/30</span>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-row">
+      <a class="wp-id" href="https://project.kstarmusic.com/work_packages/131" target="_blank">#131</a>
+      <span class="wp-title">회원 관리 + 정산 화면 포팅</span>
+      <span class="badge b-progress">In progress</span>
+      <span class="wp-date">03/10 → 03/30</span>
+      <span class="change-tag">3/16→3/30</span>
+    </div>
+    <div class="card-sub">Phase 3 gap: notify_restock partial, product_review_config missing</div>
+  </div>
+  <div class="card">
+    <div class="card-row">
+      <a class="wp-id" href="https://project.kstarmusic.com/work_packages/133" target="_blank">#133</a>
+      <span class="wp-title">설정/환경 관리 포팅</span>
+      <span class="badge b-progress">In progress</span>
+      <span class="wp-date">03/10 → 03/30</span>
+      <span class="change-tag">3/16→3/30</span>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-row">
+      <a class="wp-id" href="https://project.kstarmusic.com/work_packages/134" target="_blank">#134</a>
+      <span class="wp-title">포팅 통합 테스트 + 데이터 검증</span>
+      <span class="badge b-progress">In progress</span>
+      <span class="wp-date">03/10 → 03/30</span>
+      <span class="change-tag">3/16→3/30</span>
+    </div>
+  </div>
+</div>
+
+<!-- 어제 완료/변경 -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-dot" style="background:var(--coral)"></div>
+    <div class="section-title">어제 완료 / 주요 변경</div>
+  </div>
+
+  <div class="card">
+    <div class="card-row">
+      <a class="wp-id" href="https://project.kstarmusic.com/work_packages/140" target="_blank">#140</a>
+      <span class="wp-title">Phase 2 상품 편집 메타데이터 통합 마감</span>
+      <span class="badge b-closed">Closed</span>
+    </div>
+    <div class="card-sub">어제 생성 → 당일 완료 (07:10)</div>
+  </div>
+  <div class="card">
+    <div class="card-row">
+      <a class="wp-id" href="https://project.kstarmusic.com/work_packages/141" target="_blank">#141</a>
+      <span class="wp-title">Phase 2 업로드/가격 이력/브라우저 E2E 닫기</span>
+      <span class="badge b-closed">Closed</span>
+    </div>
+    <div class="card-sub">어제 생성 → 당일 완료 (08:30)</div>
+  </div>
+  <div class="card">
+    <div class="card-row">
+      <a class="wp-id" href="https://project.kstarmusic.com/work_packages/138" target="_blank">#138</a>
+      <span class="wp-title">쇼핑몰 MVP 마스터 일정</span>
+      <span class="change-tag">계획 변경</span>
+    </div>
+    <div class="card-sub">종료일 4/13 → 4/27 (모바일 앱 출시 범위 추가)</div>
+  </div>
+  <div class="card">
+    <div class="card-row">
+      <a class="wp-id" href="https://project.kstarmusic.com/work_packages/53" target="_blank">#53</a>
+      <span class="wp-title">미완료 백로그 (TODO) 외 10건</span>
+      <span class="badge b-rejected">Rejected</span>
+    </div>
+    <div class="card-sub">W10 미처리 항목(PG 환불, 정산 v2, ACL 확장, i18n 등) 일괄 기각</div>
+  </div>
+</div>
+
+<!-- 지연 사유 -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-dot" style="background:var(--red)"></div>
+    <div class="section-title">일정 지연 핵심 사유</div>
+  </div>
+
+  <div class="reason-card">
+    <div class="reason-title">완료 기준 강화: "엄격 패리티(PORTING-PARITY-STANDARD)"</div>
+    <div class="reason-desc">기존 "기능 동작" 기준에서 원본 관리자 체감(메뉴/레이아웃/브레드크럼/버튼/탭/필터/표 컬럼/업무 동선) 일치 기준으로 변경. 1,111개 surface 중 감사 완료 70개(6.3%).</div>
+  </div>
+  <div class="reason-card">
+    <div class="reason-title">Phase 2 상품 관리 화면 partial 판정</div>
+    <div class="reason-desc">조회수 source 미일치, 상단 우측 운영 버튼 위치, 하단 일괄수정 탭 폭/세부 배치, 행 액션/컬럼 배치 차이로 아직 완료 불가.</div>
+  </div>
+  <div class="reason-card">
+    <div class="reason-title">Phase 1 주문/배송 Closed → 재감사 돌입</div>
+    <div class="reason-desc">한번 닫았던 작업이 새 패리티 기준에 의해 재오픈. 세부 탭/버튼/필터/표 컬럼 전수 비교 잔여.</div>
+  </div>
+  <div class="reason-card">
+    <div class="reason-title">MVP 범위 확대 (웹 → 웹 + 앱)</div>
+    <div class="reason-desc">웹 MVP 오픈 후 Expo 빌드 + 스토어 심사 대응 2주 추가 → 전체 일정 4/13 → 4/27.</div>
+  </div>
+</div>
+
+<!-- 예정 스프린트 -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-dot" style="background:var(--text-tertiary)"></div>
+    <div class="section-title">앞으로의 스프린트</div>
+    <div class="section-count">5건 예정</div>
+  </div>
+
+  <div class="card">
+    <div class="card-row">
+      <a class="wp-id" href="https://project.kstarmusic.com/work_packages/143" target="_blank">#143</a>
+      <span class="wp-title">MVP-2: Phase 2 재감사 + Phase 3 최소범위</span>
+      <span class="badge b-new">New</span>
+      <span class="wp-date">03/23 → 03/30</span>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-row">
+      <a class="wp-id" href="https://project.kstarmusic.com/work_packages/147" target="_blank">#147</a>
+      <span class="wp-title">MVP-3: 컷오버 리허설</span>
+      <span class="badge b-new">New</span>
+      <span class="wp-date">03/30 → 04/06</span>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-row">
+      <a class="wp-id" href="https://project.kstarmusic.com/work_packages/151" target="_blank">#151</a>
+      <span class="wp-title">MVP-4: UAT + 하드닝 + 프리즈</span>
+      <span class="badge b-new">New</span>
+      <span class="wp-date">04/06 → 04/13</span>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-row">
+      <a class="wp-id" href="https://project.kstarmusic.com/work_packages/158" target="_blank">#158</a>
+      <span class="wp-title">MVP-5: Expo 배포 + 스토어 제출</span>
+      <span class="badge b-new">New</span>
+      <span class="wp-date">04/13 → 04/20</span>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-row">
+      <a class="wp-id" href="https://project.kstarmusic.com/work_packages/162" target="_blank">#162</a>
+      <span class="wp-title">MVP-6: 심사 대응 + 운영 안정화</span>
+      <span class="badge b-new">New</span>
+      <span class="wp-date">04/20 → 04/27</span>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  KStarMusic Store 프로젝트 대시보드 · OpenProject 기반 · 생성: 2026-03-17
+</div>
+
+</div>
+
+<script>
+const sprints = [
+  { id: 139, label: 'MVP-1', start: '2026-03-16', end: '2026-03-23', active: true },
+  { id: 143, label: 'MVP-2', start: '2026-03-23', end: '2026-03-30', active: false },
+  { id: 147, label: 'MVP-3', start: '2026-03-30', end: '2026-04-06', active: false },
+  { id: 151, label: 'MVP-4', start: '2026-04-06', end: '2026-04-13', active: false },
+  { id: 158, label: 'MVP-5', start: '2026-04-13', end: '2026-04-20', active: false },
+  { id: 162, label: 'MVP-6', start: '2026-04-20', end: '2026-04-27', active: false },
+];
+
+const TL_START = new Date('2026-03-16');
+const TL_END = new Date('2026-04-27');
+const totalDays = (TL_END - TL_START) / 864e5;
+
+function pct(d) {
+  return Math.max(0, Math.min(100, ((new Date(d) - TL_START) / 864e5) / totalDays * 100));
+}
+
+const tl = document.getElementById('timeline');
+
+const todayPct = pct('2026-03-17');
+const todayRow = document.createElement('div');
+todayRow.className = 'tl-row';
+todayRow.innerHTML = `<span class="tl-label"></span><div class="tl-track" style="background:transparent;overflow:visible"><div class="tl-today-line" style="left:${todayPct}%"><div class="tl-today-dot"></div></div></div>`;
+tl.appendChild(todayRow);
+
+sprints.forEach(s => {
+  const left = pct(s.start);
+  const right = pct(s.end);
+  const w = right - left;
+  const cls = s.active ? 'active' : 'pending';
+  const r = document.createElement('div');
+  r.className = 'tl-row';
+  r.innerHTML = `<span class="tl-label">${s.label}</span><div class="tl-track"><div class="tl-bar ${cls}" style="left:${left}%;width:${w}%">${s.label}</div></div>`;
+  tl.appendChild(r);
+});
+</script>
+</body>
+</html>
