@@ -168,7 +168,7 @@ a{color:inherit}
   <div class="hero">
     <div>
       <h1>KStarMusic Store<small style="display:block;font-size:.92rem;font-weight:500;color:var(--text-2);margin-top:6px">2026-03-20 (금) Phase 4 Batch 3 slice 2 진행 현황</small></h1>
-      <p>Batch 3 첫 슬라이스 이후 `stock_list` 검색 helper를 current rail에 흡수하고, `warehouse-settings` directness까지 보강한 날의 운영/검증 보고서</p>
+      <p>Batch 3 첫 슬라이스 이후 `stock_list` 검색 helper와 `stock_adjust_list` export rail을 current path에 흡수하고, `warehouse-settings` directness까지 보강한 날의 운영/검증 보고서</p>
     </div>
     <div class="pill">프로젝트 시작일 2026-03-06 · OpenProject 기준 집계</div>
   </div>
@@ -190,6 +190,7 @@ a{color:inherit}
         <ul class="list">
           <li><code>/inventory/items</code>에 <code>search</code>, <code>stock_status</code> query contract를 붙이고 <code>/manage/inventory</code>, <code>/manage/inventory/warehouse-stock</code>가 이를 직접 사용하도록 바꿨다.</li>
           <li>검색 predicate를 <code>상품명 / 상품ID / product_code / search_keywords / 창고 / 로케이션</code>까지 넓혀 레거시 <code>stock_search.inc</code> 축을 current rail로 흡수했다.</li>
+          <li><code>/inventory/transactions/export</code>와 <code>/manage/inventory/adjustment</code>의 <code>엑셀 다운로드</code>를 연결해 adjustment history export rail도 복원했다.</li>
           <li><code>warehouse-settings</code>를 Batch 3 공용 nav에 다시 올려 창고 기본정보 rail directness도 보강했다.</li>
         </ul>
       </div>
@@ -211,7 +212,7 @@ a{color:inherit}
       <div class="card phase-card"><div class="phase-head"><div><div class="phase-code">Phase 1</div><div class="phase-topic">주문/결제 운영</div></div><span class="badge b-done">strict closeout 완료</span></div><div class="phase-desc">order-manage shell/directness를 닫았고 남은 차이는 승인된 BANK/NTS breadth backlog뿐이다.</div></div>
       <div class="card phase-card"><div class="phase-head"><div><div class="phase-code">Phase 2</div><div class="phase-topic">상품 관리</div></div><span class="badge b-progress">QA backlog 관리</span></div><div class="phase-desc">운영 blocker는 해소됐고, 남은 차이는 QA/backlog로 관리한다.</div></div>
       <div class="card phase-card"><div class="phase-head"><div><div class="phase-code">Phase 3</div><div class="phase-topic">고객 운영/CRM</div></div><span class="badge b-done">close 완료</span></div><div class="phase-desc">strict gap 0 상태. QA polish와 후속 phase 이관 항목만 유지한다.</div></div>
-      <div class="card phase-card"><div class="phase-head"><div><div class="phase-code">Phase 4</div><div class="phase-topic">재고/ERP/창고</div></div><span class="badge b-progress">Batch 3 slice 2 진행</span></div><div class="phase-desc">stock_list 검색 helper를 current rail에 흡수했고 다음 메인은 bulk/export/popup breadth다.</div></div>
+      <div class="card phase-card"><div class="phase-head"><div><div class="phase-code">Phase 4</div><div class="phase-topic">재고/ERP/창고</div></div><span class="badge b-progress">Batch 3 slice 2 진행</span></div><div class="phase-desc">stock_list 검색 helper와 adjustment export rail을 current path에 흡수했고 다음 메인은 bulk/popup breadth다.</div></div>
       <div class="card phase-card"><div class="phase-head"><div><div class="phase-code">Phase 5</div><div class="phase-topic">프로모션/매출 분석</div></div><span class="badge b-waiting">재감사 대기</span></div><div class="phase-desc">coupon 운영 inventory와 direct page 재감사를 다음 우선순위로 유지한다.</div></div>
       <div class="card phase-card"><div class="phase-head"><div><div class="phase-code">Phase 6</div><div class="phase-topic">내부 운영/회원 정책</div></div><span class="badge b-waiting">inventory 대기</span></div><div class="phase-desc">email/sms/channel 정책 축은 inventory와 batch 분해를 남겨둔 상태다.</div></div>
       <div class="card phase-card"><div class="phase-head"><div><div class="phase-code">Phase 7</div><div class="phase-topic">파트너/외부 연동</div></div><span class="badge b-backlog">후행 분류</span></div><div class="phase-desc">외부 helper와 partner 연동은 inventory 후 batch화 예정이며, 일부 surface는 이미 이 phase로 이관됐다.</div></div>
@@ -330,7 +331,7 @@ a{color:inherit}
       <div class="row"><a class="wp-id" href="https://project.kstarmusic.com/work_packages/129" target="_blank">#129</a><div class="wp-body"><div class="wp-title">상품 관리 화면 포팅 <span class="badge b-progress">In progress</span></div><div class="wp-meta">운영 blocker 해소 후 QA/backlog 중심으로 관리.</div></div></div>
       <div class="row"><a class="wp-id" href="https://project.kstarmusic.com/work_packages/131" target="_blank">#131</a><div class="wp-body"><div class="wp-title">회원 관리 + 정산 화면 포팅 <span class="badge b-progress">In progress</span></div><div class="wp-meta">Phase 3 close 이후 후속 breadth와 정책성 이관 항목만 유지.</div></div></div>
       <div class="row"><a class="wp-id" href="https://project.kstarmusic.com/work_packages/133" target="_blank">#133</a><div class="wp-body"><div class="wp-title">설정/환경 관리 포팅 <span class="badge b-progress">In progress</span></div><div class="wp-meta">설정군 inventory와 후속 phase 경계 정리가 남아 있다.</div></div></div>
-      <div class="row"><a class="wp-id" href="https://project.kstarmusic.com/work_packages/134" target="_blank">#134</a><div class="wp-body"><div class="wp-title">포팅 통합 테스트 + 데이터 검증 <span class="badge b-progress">In progress</span></div><div class="wp-meta">오늘 Phase 4 Batch 3 slice 2 검색 rail 검증과 증거를 반영했다.</div></div></div>
+      <div class="row"><a class="wp-id" href="https://project.kstarmusic.com/work_packages/134" target="_blank">#134</a><div class="wp-body"><div class="wp-title">포팅 통합 테스트 + 데이터 검증 <span class="badge b-progress">In progress</span></div><div class="wp-meta">오늘 Phase 4 Batch 3 slice 2 검색 rail과 adjustment export 검증 증거를 반영했다.</div></div></div>
       <div class="row"><a class="wp-id" href="https://project.kstarmusic.com/work_packages/138" target="_blank">#138</a><div class="wp-body"><div class="wp-title">쇼핑몰 MVP + 운영/앱 출시 일정 <span class="badge b-progress">In progress</span></div><div class="wp-meta">전체 스프린트와 릴리즈 타임라인 조정용 summary task.</div></div></div>
       <div class="row"><a class="wp-id" href="https://project.kstarmusic.com/work_packages/139" target="_blank">#139</a><div class="wp-body"><div class="wp-title">Sprint MVP-1: Phase 2 핵심 마감 <span class="badge b-progress">In progress</span></div><div class="wp-meta">상품/ERP/검증 축이 이어지는 현재 active sprint.</div></div></div>
     </div>
@@ -349,7 +350,7 @@ a{color:inherit}
       <div class="card">
         <h3 style="font-size:.86rem;margin-bottom:8px">실데이터 검증</h3>
         <ul class="list">
-          <li><code>/manage/inventory</code>, <code>/manage/inventory/warehouse-stock</code>, <code>/manage/inventory/warehouse-settings</code>를 한국어 관리자 rail에서 열어 검색/상태 filter와 nav directness를 확인.</li>
+          <li><code>/manage/inventory</code>, <code>/manage/inventory/warehouse-stock</code>, <code>/manage/inventory/warehouse-settings</code>, <code>/manage/inventory/adjustment</code>를 한국어 관리자 rail에서 열어 검색/상태 filter와 nav directness, export action 노출을 확인.</li>
           <li><code>warehouse-stock → 현황</code> direct link가 warehouse/location 문맥을 유지한 채 overview로 이어지는지 검토했다.</li>
           <li>기존 Batch 3 evidence와 함께 새 screenshot을 `manage-inventory-overview-filters`, `manage-inventory-warehouse-stock-filters`, `manage-inventory-warehouse-settings-nav`로 추가했다.</li>
         </ul>
@@ -358,7 +359,7 @@ a{color:inherit}
         <h3 style="font-size:.86rem;margin-bottom:8px">검증 세트</h3>
         <ul class="list">
           <li><code>npx tsc --noEmit</code></li>
-          <li><code>fastapi_backend/.venv/bin/pytest fastapi_backend/tests/test_inventory_transaction_filters_contract.py fastapi_backend/tests/test_inventory_item_filters_contract.py</code></li>
+          <li><code>fastapi_backend/.venv/bin/pytest fastapi_backend/tests/test_inventory_transaction_filters_contract.py fastapi_backend/tests/test_inventory_item_filters_contract.py fastapi_backend/tests/test_inventory_transaction_export_api.py</code></li>
           <li><code>jq empty docs/porting/audits/manual-findings.json</code></li>
           <li><code>agent-browser</code> 한국어 관리자 검증 및 스크린샷 확보</li>
         </ul>
