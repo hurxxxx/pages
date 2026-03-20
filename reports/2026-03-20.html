@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>KStarMusic Store — 2026-03-20 Phase 4 Batch 1 strict closeout 현황</title>
+<title>KStarMusic Store — 2026-03-20 Phase 4 Batch 2 closeout 현황</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -167,8 +167,8 @@ a{color:inherit}
 
   <div class="hero">
     <div>
-      <h1>KStarMusic Store<small style="display:block;font-size:.92rem;font-weight:500;color:var(--text-2);margin-top:6px">2026-03-20 (금) Phase 4 Batch 1 strict closeout 현황</small></h1>
-      <p>발주·입고 rail을 strict closeout 기준으로 닫고, 다음 우선순위를 `Batch 2 바코드·현장 스캔`으로 넘긴 날의 운영/검증 보고서</p>
+      <h1>KStarMusic Store<small style="display:block;font-size:.92rem;font-weight:500;color:var(--text-2);margin-top:6px">2026-03-20 (금) Phase 4 Batch 2 closeout 현황</small></h1>
+      <p>바코드·현장 스캔 rail을 closeout 기준으로 닫고, 다음 우선순위를 `Batch 3 재고·창고 breadth`로 넘긴 날의 운영/검증 보고서</p>
     </div>
     <div class="pill">프로젝트 시작일 2026-03-06 · OpenProject 기준 집계</div>
   </div>
@@ -186,18 +186,18 @@ a{color:inherit}
     <div class="sec-h"><span class="dot"></span><div class="sec-t">오늘 핵심 요약</div></div>
     <div class="cards">
       <div class="card callout">
-        <h3>Phase 4 Batch 1 strict closeout 완료</h3>
+        <h3>Phase 4 Batch 2 closeout 완료</h3>
         <ul class="list">
-          <li><code>erp@order</code>, <code>erp@in</code>을 <strong>merged</strong>로 재판정했다.</li>
-          <li><code>erp@order_detail</code>, <code>erp@order_mod</code>, <code>erp@order_in_all</code>을 current canonical rail 기준 <strong>replaced</strong>로 닫았다.</li>
-          <li><code>purchase-orders</code> 상세/action breadth, <code>발주서 입고</code>, <code>일괄발주서 입고</code>, PO↔Inbound idempotent link, xlsx template export, bulk upload receive flow를 실제 데이터로 검증했다.</li>
+          <li><code>erp@barcode</code>를 <strong>merged</strong>로 재판정했다.</li>
+          <li><code>erp@complete</code>, <code>erp@stock_barcode</code>, <code>erp@stock_check</code>, <code>erp@storage_in</code>을 current canonical rail 기준 <strong>replaced</strong>로 닫았다.</li>
+          <li><code>바코드 관리/인쇄/배송처리/재고조정/재고파악/창고 배치</code> rail과 scan API, location bridge를 실제 데이터로 검증했다.</li>
         </ul>
       </div>
       <div class="card callout" style="border-left-color:var(--amber)">
         <h3>다음 우선순위</h3>
         <ul class="list">
-          <li>Phase 4 메인 포커스는 <strong>Batch 2 바코드·현장 스캔</strong>이다.</li>
-          <li>Batch 1 후속 breadth는 운영 blocker가 아니라 QA/backlog 성격으로 낮췄다.</li>
+          <li>Phase 4 메인 포커스는 <strong>Batch 3 재고·창고 breadth</strong>다.</li>
+          <li>Batch 2 closeout 이후 남은 ERP 범위는 <code>stock_adjust*</code>, <code>stock_list</code>, <code>storage/storage_cate</code>, <code>audit</code>, <code>excess-stock</code> 쪽 breadth다.</li>
           <li>Phase 1은 strict closeout 상태를 유지하고 회귀만 대응한다.</li>
         </ul>
       </div>
@@ -211,7 +211,7 @@ a{color:inherit}
       <div class="card phase-card"><div class="phase-head"><div><div class="phase-code">Phase 1</div><div class="phase-topic">주문/결제 운영</div></div><span class="badge b-done">strict closeout 완료</span></div><div class="phase-desc">order-manage shell/directness를 닫았고 남은 차이는 승인된 BANK/NTS breadth backlog뿐이다.</div></div>
       <div class="card phase-card"><div class="phase-head"><div><div class="phase-code">Phase 2</div><div class="phase-topic">상품 관리</div></div><span class="badge b-progress">QA backlog 관리</span></div><div class="phase-desc">운영 blocker는 해소됐고, 남은 차이는 QA/backlog로 관리한다.</div></div>
       <div class="card phase-card"><div class="phase-head"><div><div class="phase-code">Phase 3</div><div class="phase-topic">고객 운영/CRM</div></div><span class="badge b-done">close 완료</span></div><div class="phase-desc">strict gap 0 상태. QA polish와 후속 phase 이관 항목만 유지한다.</div></div>
-      <div class="card phase-card"><div class="phase-head"><div><div class="phase-code">Phase 4</div><div class="phase-topic">재고/ERP/창고</div></div><span class="badge b-progress">Batch 1 closeout 완료</span></div><div class="phase-desc">발주·입고는 merged. 다음 메인은 Batch 2 바코드·현장 스캔이다.</div></div>
+      <div class="card phase-card"><div class="phase-head"><div><div class="phase-code">Phase 4</div><div class="phase-topic">재고/ERP/창고</div></div><span class="badge b-progress">Batch 2 closeout 완료</span></div><div class="phase-desc">바코드·현장 스캔 rail을 닫았고 다음 메인은 Batch 3 재고·창고 breadth다.</div></div>
       <div class="card phase-card"><div class="phase-head"><div><div class="phase-code">Phase 5</div><div class="phase-topic">프로모션/매출 분석</div></div><span class="badge b-waiting">재감사 대기</span></div><div class="phase-desc">coupon 운영 inventory와 direct page 재감사를 다음 우선순위로 유지한다.</div></div>
       <div class="card phase-card"><div class="phase-head"><div><div class="phase-code">Phase 6</div><div class="phase-topic">내부 운영/회원 정책</div></div><span class="badge b-waiting">inventory 대기</span></div><div class="phase-desc">email/sms/channel 정책 축은 inventory와 batch 분해를 남겨둔 상태다.</div></div>
       <div class="card phase-card"><div class="phase-head"><div><div class="phase-code">Phase 7</div><div class="phase-topic">파트너/외부 연동</div></div><span class="badge b-backlog">후행 분류</span></div><div class="phase-desc">외부 helper와 partner 연동은 inventory 후 batch화 예정이며, 일부 surface는 이미 이 phase로 이관됐다.</div></div>
@@ -233,7 +233,7 @@ a{color:inherit}
     <div class="chart-box" style="margin-top:12px">
       <h3>일자별 활동 추이</h3>
       <div class="chart-wrap"><canvas id="trendChart"></canvas></div>
-      <p class="note" style="margin-top:8px;color:var(--text-2)">03/20에는 주문/배송 포팅 닫힘과 Phase 4 Batch 1 검증 반영으로 변경량이 집중됐다.</p>
+      <p class="note" style="margin-top:8px;color:var(--text-2)">03/20에는 주문/배송 strict closeout과 Phase 4 Batch 1~2 검증 반영으로 변경량이 집중됐다.</p>
     </div>
   </section>
 
@@ -257,12 +257,17 @@ a{color:inherit}
       </div>
       <div class="timeline-row">
         <div class="tl-title">Phase 4 Batch 2 바코드·현장 스캔</div>
-        <div class="tl-bar"><div class="tl-fill" style="left:46%;width:13%;background:var(--amber)"></div></div>
+        <div class="tl-bar"><div class="tl-fill" style="left:46%;width:13%;background:var(--green)"></div></div>
+        <div class="note">03/20 closeout</div>
+      </div>
+      <div class="timeline-row">
+        <div class="tl-title">Phase 4 Batch 3 재고·창고 breadth</div>
+        <div class="tl-bar"><div class="tl-fill" style="left:60%;width:12%;background:var(--amber)"></div></div>
         <div class="note">다음 우선순위</div>
       </div>
       <div class="timeline-row">
         <div class="tl-title">Phase 5 coupon inventory</div>
-        <div class="tl-bar"><div class="tl-fill" style="left:60%;width:12%;background:var(--gray)"></div></div>
+        <div class="tl-bar"><div class="tl-fill" style="left:73%;width:10%;background:var(--gray)"></div></div>
         <div class="note">후행 대기</div>
       </div>
     </div>
@@ -273,10 +278,10 @@ a{color:inherit}
     <div class="cards">
       <div class="card">
         <div class="progress-row">
-          <div class="progress-meta"><span>Phase 4 Batch 1 strict closeout 대상 surface</span><strong>5 / 5</strong></div>
+          <div class="progress-meta"><span>Phase 4 Batch 2 closeout 대상 surface</span><strong>5 / 5</strong></div>
           <div class="progress-track"><div class="progress-fill" style="width:100%;background:var(--green)"></div></div>
         </div>
-        <p class="note" style="color:var(--text-2)">발주/입고 core와 hidden helper 재판정을 모두 닫고 Batch 2로 넘길 수 있는 상태를 확인했다.</p>
+        <p class="note" style="color:var(--text-2)">바코드 관리, 인쇄, 배송처리, 재고조정, 재고파악, 창고 배치 rail을 모두 닫고 Batch 3로 넘길 수 있는 상태를 확인했다.</p>
       </div>
       <div class="card">
         <div class="progress-row">
@@ -294,12 +299,12 @@ a{color:inherit}
       <div class="sprint-card card">
         <div class="progress-meta"><strong>Sprint P0</strong><span>03/10 ~ 03/30</span></div>
         <div class="progress-track"><div class="progress-fill" style="width:74%;background:var(--blue)"></div></div>
-        <p class="note" style="margin-top:8px;color:var(--text-2)">Phase 1 close, Phase 3 close, Phase 4 Batch 1 closeout까지 반영돼 종합 진척이 크게 올라간 상태.</p>
+        <p class="note" style="margin-top:8px;color:var(--text-2)">Phase 1 close, Phase 3 close, Phase 4 Batch 1~2 closeout까지 반영돼 종합 진척이 크게 올라간 상태.</p>
       </div>
       <div class="sprint-card card">
         <div class="progress-meta"><strong>Sprint MVP-1</strong><span>03/16 ~ 03/23</span></div>
         <div class="progress-track"><div class="progress-fill" style="width:62%;background:var(--green)"></div></div>
-        <p class="note" style="margin-top:8px;color:var(--text-2)">상품/고객/ERP cross-check가 이어지고 있으며, 다음 핵심 마일은 Batch 2 바코드 스캔 rail이다.</p>
+        <p class="note" style="margin-top:8px;color:var(--text-2)">상품/고객/ERP cross-check가 이어지고 있으며, 다음 핵심 마일은 Batch 3 재고·창고 breadth다.</p>
       </div>
     </div>
   </section>
@@ -320,12 +325,12 @@ a{color:inherit}
   <section class="sec">
     <div class="sec-h"><span class="dot"></span><div class="sec-t">현재 진행 중인 작업</div></div>
     <div class="card wp-list">
-      <div class="row"><a class="wp-id" href="https://project.kstarmusic.com/work_packages/126" target="_blank">#126</a><div class="wp-body"><div class="wp-title">Sprint P0: 뮤직플랜트 백오피스 포팅 <span class="badge b-progress">In progress</span></div><div class="wp-meta">P0 전체 모선. 현재 메인 흐름은 Phase 4 Batch 2와 후속 inventory 정리.</div></div></div>
+      <div class="row"><a class="wp-id" href="https://project.kstarmusic.com/work_packages/126" target="_blank">#126</a><div class="wp-body"><div class="wp-title">Sprint P0: 뮤직플랜트 백오피스 포팅 <span class="badge b-progress">In progress</span></div><div class="wp-meta">P0 전체 모선. 현재 메인 흐름은 Phase 4 Batch 3와 후속 inventory 정리.</div></div></div>
       <div class="row"><a class="wp-id" href="https://project.kstarmusic.com/work_packages/128" target="_blank">#128</a><div class="wp-body"><div class="wp-title">포팅 대상 DB 스키마/API 매핑 설계 <span class="badge b-progress">In progress</span></div><div class="wp-meta">포팅 전반의 canonical 모델 기준 문서화가 계속 진행 중.</div></div></div>
       <div class="row"><a class="wp-id" href="https://project.kstarmusic.com/work_packages/129" target="_blank">#129</a><div class="wp-body"><div class="wp-title">상품 관리 화면 포팅 <span class="badge b-progress">In progress</span></div><div class="wp-meta">운영 blocker 해소 후 QA/backlog 중심으로 관리.</div></div></div>
       <div class="row"><a class="wp-id" href="https://project.kstarmusic.com/work_packages/131" target="_blank">#131</a><div class="wp-body"><div class="wp-title">회원 관리 + 정산 화면 포팅 <span class="badge b-progress">In progress</span></div><div class="wp-meta">Phase 3 close 이후 후속 breadth와 정책성 이관 항목만 유지.</div></div></div>
       <div class="row"><a class="wp-id" href="https://project.kstarmusic.com/work_packages/133" target="_blank">#133</a><div class="wp-body"><div class="wp-title">설정/환경 관리 포팅 <span class="badge b-progress">In progress</span></div><div class="wp-meta">설정군 inventory와 후속 phase 경계 정리가 남아 있다.</div></div></div>
-      <div class="row"><a class="wp-id" href="https://project.kstarmusic.com/work_packages/134" target="_blank">#134</a><div class="wp-body"><div class="wp-title">포팅 통합 테스트 + 데이터 검증 <span class="badge b-progress">In progress</span></div><div class="wp-meta">오늘 Phase 4 Batch 1 strict closeout 검증 결과와 증거를 반영했다.</div></div></div>
+      <div class="row"><a class="wp-id" href="https://project.kstarmusic.com/work_packages/134" target="_blank">#134</a><div class="wp-body"><div class="wp-title">포팅 통합 테스트 + 데이터 검증 <span class="badge b-progress">In progress</span></div><div class="wp-meta">오늘 Phase 4 Batch 2 closeout 검증 결과와 증거를 반영했다.</div></div></div>
       <div class="row"><a class="wp-id" href="https://project.kstarmusic.com/work_packages/138" target="_blank">#138</a><div class="wp-body"><div class="wp-title">쇼핑몰 MVP + 운영/앱 출시 일정 <span class="badge b-progress">In progress</span></div><div class="wp-meta">전체 스프린트와 릴리즈 타임라인 조정용 summary task.</div></div></div>
       <div class="row"><a class="wp-id" href="https://project.kstarmusic.com/work_packages/139" target="_blank">#139</a><div class="wp-body"><div class="wp-title">Sprint MVP-1: Phase 2 핵심 마감 <span class="badge b-progress">In progress</span></div><div class="wp-meta">상품/ERP/검증 축이 이어지는 현재 active sprint.</div></div></div>
     </div>
@@ -344,9 +349,9 @@ a{color:inherit}
       <div class="card">
         <h3 style="font-size:.86rem;margin-bottom:8px">실데이터 검증</h3>
         <ul class="list">
-          <li>PO 기준 <code>발주서 입고</code>에서 창고/로케이션 선택 후 실입고 처리.</li>
-          <li><code>warehouse-inbound?order_id=...</code> direct jump로 linked inbound를 즉시 재오픈.</li>
-          <li><code>일괄발주서 입고</code>에서 서버 템플릿 기반 xlsx 업로드 후 summary와 실제 receive 반영 확인.</li>
+          <li>sample barcode <code>PHASE4B220260320001</code> 기준으로 배송처리, 재고조정, 재고파악, 창고 배치 direct page를 순차 검증.</li>
+          <li><code>assign-location</code>에서 <code>대기 목록에 추가 → 배치 적용</code> staging 흐름과 버튼 enablement 확인.</li>
+          <li><code>barcodes/print?items=1:2&start=1</code>에서 시작 위치 여백과 다건 라벨 시트 렌더를 확인.</li>
         </ul>
       </div>
       <div class="card">
@@ -354,6 +359,7 @@ a{color:inherit}
         <ul class="list">
           <li><code>npx tsc --noEmit</code></li>
           <li><code>fastapi_backend/.venv/bin/pytest fastapi_backend/tests/test_phase4_batch1_backend_api.py</code></li>
+          <li><code>fastapi_backend/.venv/bin/pytest fastapi_backend/tests/test_phase4_batch2_barcode_api.py</code></li>
           <li><code>jq empty docs/porting/audits/manual-findings.json</code></li>
           <li><code>agent-browser</code> 한국어 관리자 검증 및 스크린샷 확보</li>
         </ul>
@@ -365,9 +371,9 @@ a{color:inherit}
     <div class="sec-h"><span class="dot"></span><div class="sec-t">다음 작업</div></div>
     <div class="card">
       <ul class="list">
-        <li>Phase 4 Batch 2 <strong>바코드·현장 스캔</strong> 착수</li>
-        <li><code>barcode_print*</code>, <code>stock_barcode</code>, scan rail directness 복원</li>
-        <li>Batch 3 재고/창고 rail은 Batch 2 후행으로 유지</li>
+        <li>Phase 4 Batch 3 <strong>재고·창고 breadth</strong> 착수</li>
+        <li><code>stock_adjust*</code>, <code>stock_list</code>, <code>storage</code>, <code>storage_cate</code> bulk/history parity 정리</li>
+        <li><code>audit</code>, <code>excess-stock</code>의 mock/pending 판정을 유지할지 실데이터 rail로 올릴지 결정</li>
       </ul>
     </div>
   </section>
