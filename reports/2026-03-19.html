@@ -142,6 +142,52 @@ h1 small { display:block; font-size:.82rem; font-weight:400; color:var(--text-2)
   gap:12px;
   margin-bottom:12px;
 }
+.phase-grid {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
+}
+.phase-card {
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--r);
+  padding:.95rem 1rem;
+  box-shadow:var(--shadow);
+}
+.phase-head {
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:8px;
+  margin-bottom:8px;
+}
+.phase-code {
+  font-size:.72rem;
+  font-weight:700;
+  color:var(--accent);
+  font-family:var(--mono);
+}
+.phase-topic {
+  font-size:.84rem;
+  font-weight:600;
+  margin-top:2px;
+}
+.phase-state {
+  font-size:.67rem;
+  font-weight:600;
+  padding:3px 8px;
+  border-radius:999px;
+  white-space:nowrap;
+}
+.tone-active { background:var(--blue-bg); color:var(--blue-t); }
+.tone-done { background:var(--green-bg); color:var(--green-t); }
+.tone-waiting { background:var(--gray-bg); color:var(--gray-t); }
+.tone-backlog { background:var(--amber-bg); color:var(--amber-t); }
+.phase-detail {
+  font-size:.76rem;
+  color:var(--text-2);
+  line-height:1.5;
+}
 .chart-box, .chart-wrap, .tl-wrap, .sprint-card {
   background:var(--surface);
   border:1px solid var(--border);
@@ -342,6 +388,7 @@ h1 small { display:block; font-size:.82rem; font-weight:400; color:var(--text-2)
 .footer a { color:var(--accent); text-decoration:none; }
 @media (max-width:768px) {
   .metrics { grid-template-columns:repeat(3,1fr); }
+  .phase-grid { grid-template-columns:1fr; }
   .chart-grid, .eval { grid-template-columns:1fr; }
   .tl-name { width:82px; font-size:.66rem; }
   .tl-dates { padding-left:90px; }
@@ -378,6 +425,15 @@ h1 small { display:block; font-size:.82rem; font-weight:400; color:var(--text-2)
         <div class="sub" style="margin-top:8px"><strong style="font-size:.76rem;color:var(--text)">증빙 포인트</strong><br>`pytest`, `tsc`, `agent-browser`, manual findings, OpenProject 상태 전환까지 한 묶음으로 닫았다.</div>
       </div>
     </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h">
+      <div class="sec-dot" style="background:var(--accent)"></div>
+      <div class="sec-t">전체 Phase 현황</div>
+      <div class="sec-r">고정 표시: Phase 0 → 7</div>
+    </div>
+    <div id="phase-overview" class="phase-grid"></div>
   </div>
 
   <div class="sec">
@@ -531,6 +587,16 @@ const report = {
     "OpenProject `#145 Phase 3 최소 오픈 범위 마감`을 Closed로 전환했고, 설명까지 코드·검증 기준으로 동기화했다.",
     "후기 설정 breadth는 구매 횟수 작성, 제목 제한, 이미지 제한, 고객 수정/삭제, 이름 마스킹, 신규 글 표시를 persisted setting과 공개 review policy까지 연결해 닫았다.",
     "Phase 3 in-scope 감사는 `merged 20 / replaced 30`으로 strict gap 0이 됐고, 남은 차이는 QA polish와 후속 phase 이관만 남았다."
+  ],
+  phases: [
+    { code:"Phase 0", topic:"게시판 운영", state:"대기", tone:"waiting", detail:"별도 착수 전. 현재 일일 리포트에서는 inventory 없음 상태로 유지한다." },
+    { code:"Phase 1", topic:"주문/결제 운영", state:"strict 재감사 진행 중", tone:"active", detail:"현재 최우선 축이다. 주문/배송 화면과 동선 parity 재검증이 계속 진행 중이다." },
+    { code:"Phase 2", topic:"상품 관리", state:"운영 blocker 해소 / QA backlog 관리", tone:"backlog", detail:"핵심 blocker는 해소됐고, 남은 차이는 QA backlog와 strict 재감사 후속으로 관리한다." },
+    { code:"Phase 3", topic:"고객 운영/CRM", state:"close 완료 / strict gap 0", tone:"done", detail:"고객 상세 CRM, 적립금/예치금, privacy/receive-deny, 후기/Q&A 설정을 닫았고 후속 phase 이관만 남았다." },
+    { code:"Phase 4", topic:"재고/ERP/창고", state:"대기", tone:"waiting", detail:"본격 착수 전 단계다. 현재는 customer/product 우선순위 뒤에 위치한다." },
+    { code:"Phase 5", topic:"프로모션/매출 분석", state:"coupon 운영 inventory 재감사 대기", tone:"waiting", detail:"다음 주요 후보. promotion coupon direct page와 inventory 재감사가 예정돼 있다." },
+    { code:"Phase 6", topic:"내부 운영/회원 정책", state:"정책 inventory 대기", tone:"waiting", detail:"email/sms/channel 계열 정책과 설정 surface 분류가 남아 있다." },
+    { code:"Phase 7", topic:"파트너/벤더/외부 연동", state:"external helper inventory 대기", tone:"waiting", detail:"외부 helper와 vendor/integration surface를 후속 phase로 이관해 정리한다." }
   ],
   delays: [
     {
@@ -811,6 +877,21 @@ function renderHighlights() {
   `).join("");
 }
 
+function renderPhases() {
+  document.getElementById("phase-overview").innerHTML = report.phases.map((phase) => `
+    <div class="phase-card">
+      <div class="phase-head">
+        <div>
+          <div class="phase-code">${phase.code}</div>
+          <div class="phase-topic">${phase.topic}</div>
+        </div>
+        <div class="phase-state tone-${phase.tone}">${phase.state}</div>
+      </div>
+      <div class="phase-detail">${phase.detail}</div>
+    </div>
+  `).join("");
+}
+
 function renderSchedule() {
   const body = document.getElementById("schedule-body");
   if (report.scheduleChanges.length === 0) {
@@ -974,6 +1055,7 @@ function renderCharts() {
 }
 
 renderMetrics();
+renderPhases();
 renderHighlights();
 renderSchedule();
 renderDelays();
