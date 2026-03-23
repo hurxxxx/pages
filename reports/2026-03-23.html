@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>KStarMusic Store — 2026-03-23 Phase 6 closeout + Phase 7 운영 동기화</title>
+<title>KStarMusic Store — 2026-03-23 Phase 6/7 closeout + bootstrap/auth hardening</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -173,8 +173,8 @@ code{
 
   <div class="hero">
     <div>
-      <h1>KStarMusic Store<small style="display:block;font-size:.92rem;font-weight:500;color:var(--text-2);margin-top:6px">2026-03-23 (월) Phase 6 closeout + Phase 7 운영 동기화</small></h1>
-      <p><strong>2026-03-23</strong> 기준으로 Phase 6 QA wording/directness closeout, Phase 7 운영 메모 동기화, Phase 0 후속 안정화 기록까지 같은 closeout 기준으로 잠갔다. 오늘 변화는 새 기능 추가보다 관리자 한국어 directness 정리, 장부 정합성, OpenProject 작업 기록 동기화에 집중된 마감 성격의 배치였다.</p>
+      <h1>KStarMusic Store<small style="display:block;font-size:.92rem;font-weight:500;color:var(--text-2);margin-top:6px">2026-03-23 (월) Phase 6/7 closeout + bootstrap/auth hardening</small></h1>
+      <p><strong>2026-03-23</strong> 기준으로 Phase 6 QA wording/directness closeout과 Phase 7 운영 메모 동기화에 더해, empty DB Alembic bootstrap hardening과 <code>shared@manage.header</code> 세션/bootstrap closeout까지 같은 판정으로 잠갔다. 오늘 변화는 새 기능 추가보다 관리자 운영 신뢰도, 장부 정합성, OpenProject/Pages 동기화에 집중된 마감 성격의 배치였다.</p>
     </div>
     <div class="pill">프로젝트 시작일 2026-03-06 · OpenProject + git + PROGRESS 기준</div>
   </div>
@@ -192,27 +192,27 @@ code{
     <div class="sec-h"><span class="dot"></span><div class="sec-t">오늘 핵심 요약</div></div>
     <div class="cards-3">
       <div class="card callout">
-        <h3>Phase 6 closeout 완료</h3>
+        <h3>Phase 6/7 closeout 유지</h3>
         <ul class="list">
           <li><code>/manage</code>, 부서 관리, 회원 정책/그룹, 메시징, 이메일 템플릿, 배너/팝업, 본인인증, 검색어 분석 rail의 한국어 wording과 helper 문구를 같은 톤으로 정리했다.</li>
           <li>Phase 6 tracker, PROGRESS, manual findings가 모두 <code>strict gap 0</code> 기준으로 다시 잠겼다.</li>
-          <li>브라우저 sweep과 targeted pytest로 closeout 근거를 재확인했다.</li>
+          <li>Phase 7 운영 메모도 같은 closeout 문구로 다시 맞췄고, Phase 0~7 strict close 상태는 유지된다.</li>
         </ul>
       </div>
       <div class="card callout" style="border-left-color:var(--green)">
-        <h3>Phase 7 운영 동기화 완료</h3>
+        <h3>Cross-cutting closeout 완료</h3>
         <ul class="list">
-          <li>기능 변경 없이 <code>PROGRESS.md</code>, <code>phase-7-tracker.md</code>, <code>manual-findings.json</code>, OpenProject <code>#138</code>, <code>#143</code>를 같은 문구로 맞췄다.</li>
-          <li>Phase 7은 partner/vendor/subscription/openmarket strict gap <code>0</code> 상태를 유지하고 운영 메모 정합성만 follow-up으로 남겼다.</li>
-          <li>이번 묶음의 git 커밋은 <code>855d028</code>까지 반영됐다.</li>
+          <li>empty scratch DB에서 <code>alembic upgrade head</code>, <code>alembic_version</code> 기록, head 재실행 no-op, 한 단계 downgrade/upgrade smoke를 모두 다시 통과시켰다.</li>
+          <li><code>active_session_nonce</code> 기반 새 로그인 우선 정책으로 duplicate admin login guard를 대체했고 logout/change/reset password invalidation까지 같은 흐름으로 맞췄다.</li>
+          <li><code>shared@manage.header</code>는 이제 partial이 아니라 <code>replaced</code>로 닫혔고, 외부 SSO bridge는 승인 제외 항목으로 문서화했다.</li>
         </ul>
       </div>
       <div class="card callout" style="border-left-color:var(--amber)">
         <h3>남은 비차단 후속</h3>
         <ul class="list">
-          <li>전역 감사 장부 기준 close-like surface는 <strong>209 / 210</strong>이며, 남은 1건은 <code>shared@manage.header</code> 공용 bootstrap partial이다.</li>
-          <li>운영 blocker는 없고, 승인된 backlog와 빈 DB base migration bootstrap 기술부채만 별도 관리한다.</li>
-          <li>콘솔에는 HMR 로그와 <code>DialogContent</code> 접근성 경고가 남았지만 페이지 에러는 없었다.</li>
+          <li>전역 감사 장부 기준 close-like surface는 <strong>210 / 210</strong>이며, strict reopen이 필요한 공용 partial은 남지 않았다.</li>
+          <li>운영 blocker는 없고, 승인된 backlog와 회귀 검증 주기, 운영 메모 정합성 유지가 현재 후속 전부다.</li>
+          <li>브라우저 콘솔에는 HMR 로그만 남았고 페이지 에러는 없었다.</li>
         </ul>
       </div>
     </div>
@@ -292,16 +292,16 @@ code{
     <div class="cards">
       <div class="card">
         <div class="progress-row">
-          <div class="progress-meta"><span>감사 장부 close-like</span><strong>209 / 210</strong></div>
-          <div class="progress-track"><div class="progress-fill" style="width:99.5%;background:var(--green)"></div></div>
+          <div class="progress-meta"><span>감사 장부 close-like</span><strong>210 / 210</strong></div>
+          <div class="progress-track"><div class="progress-fill" style="width:100%;background:var(--green)"></div></div>
         </div>
-        <p class="note">남은 1건은 <code>shared@manage.header</code> 공용 bootstrap partial이며, 각 phase strict close 판정에는 blocker로 잡히지 않는 비차단 항목이다.</p>
+        <p class="note"><code>shared@manage.header</code>까지 <code>replaced</code>로 닫히면서 공용 partial도 0이 됐다. 현재 장부는 empty DB bootstrap hardening과 admin session closeout까지 포함한 2026-03-23 기준을 반영한다.</p>
       </div>
       <div class="card">
         <ul class="list">
-          <li>backend regression: targeted pytest 10개 파일, <strong>18 passed</strong></li>
-          <li>frontend/static: <code>npx tsc --noEmit</code>, 대상 <code>eslint</code> 통과</li>
-          <li>agent-browser: 대시보드, 부서 관리, 회원 정책/그룹, 메시징, 이메일 템플릿, 배너/팝업, 본인인증, 검색어 분석 한국어 관리자 sweep 완료</li>
+          <li>backend regression: Phase 6 targeted pytest <strong>18 passed</strong> + auth/session regression <strong>4 passed</strong></li>
+          <li>migration smoke: empty DB <code>alembic upgrade head</code>, no-op rerun, <code>20260323_phase0_strict_board_scope</code> downgrade/upgrade 재확인</li>
+          <li>agent-browser: 한국어 관리자 sweep, stale <code>/manage</code> → <code>/admin?from=/manage</code>, 정상 로그아웃 → storefront <code>/ko</code> 검증 완료</li>
         </ul>
       </div>
     </div>
@@ -359,14 +359,14 @@ code{
     <div class="sec-h"><span class="dot"></span><div class="sec-t">현재 진행 중인 작업</div></div>
     <div class="card wp-list">
       <div class="row"><a class="wp-id" href="https://project.kstarmusic.com/work_packages/126" target="_blank">#126</a><div class="wp-body"><div class="wp-title">Sprint P0: 뮤직플랜트 백오피스 포팅</div><div class="wp-meta">2026-03-10 ~ 2026-03-30 · Phase 전체 묶음의 상위 스프린트</div></div></div>
-      <div class="row"><a class="wp-id" href="https://project.kstarmusic.com/work_packages/128" target="_blank">#128</a><div class="wp-body"><div class="wp-title">포팅 대상 DB 스키마/API 매핑 설계</div><div class="wp-meta">2026-03-10 ~ 2026-03-30 · 빈 DB bootstrap 기술부채와 구조화 설계 follow-up 포함</div></div></div>
+      <div class="row"><a class="wp-id" href="https://project.kstarmusic.com/work_packages/128" target="_blank">#128</a><div class="wp-body"><div class="wp-title">포팅 대상 DB 스키마/API 매핑 설계</div><div class="wp-meta">2026-03-10 ~ 2026-03-30 · 승인된 운영 backlog와 구조화 설계 follow-up 유지</div></div></div>
       <div class="row"><a class="wp-id" href="https://project.kstarmusic.com/work_packages/129" target="_blank">#129</a><div class="wp-body"><div class="wp-title">상품 관리 화면 포팅</div><div class="wp-meta">2026-03-10 ~ 2026-03-23 · close 이후 승인된 회귀/운영 backlog 정리</div></div></div>
       <div class="row"><a class="wp-id" href="https://project.kstarmusic.com/work_packages/131" target="_blank">#131</a><div class="wp-body"><div class="wp-title">회원 관리 + 정산 화면 포팅</div><div class="wp-meta">2026-03-10 ~ 2026-03-30 · Phase 6 closeout 이후 운영 정합성 유지</div></div></div>
       <div class="row"><a class="wp-id" href="https://project.kstarmusic.com/work_packages/133" target="_blank">#133</a><div class="wp-body"><div class="wp-title">설정/환경 관리 포팅</div><div class="wp-meta">2026-03-10 ~ 2026-03-30 · 메시징, 본인인증, 배너/팝업 rail closeout 반영</div></div></div>
       <div class="row"><a class="wp-id" href="https://project.kstarmusic.com/work_packages/134" target="_blank">#134</a><div class="wp-body"><div class="wp-title">포팅 통합 테스트 + 데이터 검증</div><div class="wp-meta">2026-03-10 ~ 2026-03-30 · targeted pytest와 브라우저 회귀 주기 유지</div></div></div>
       <div class="row"><a class="wp-id" href="https://project.kstarmusic.com/work_packages/138" target="_blank">#138</a><div class="wp-body"><div class="wp-title">쇼핑몰 MVP + 운영/앱 출시 일정</div><div class="wp-meta">2026-03-16 ~ 2026-04-27 · Phase 0~7 strict close와 현행 후속을 설명하는 상위 로드맵</div></div></div>
       <div class="row"><a class="wp-id" href="https://project.kstarmusic.com/work_packages/139" target="_blank">#139</a><div class="wp-body"><div class="wp-title">Sprint MVP-1 (03.17~03.22): Phase 2 핵심 마감</div><div class="wp-meta">2026-03-16 ~ 2026-03-23 · closed child 2건, 완료 마커 1건 대기</div></div></div>
-      <div class="row"><a class="wp-id" href="https://project.kstarmusic.com/work_packages/143" target="_blank">#143</a><div class="wp-body"><div class="wp-title">Sprint MVP-2 (03.23~03.29): Phase 6 closeout + Phase 7 운영 동기화</div><div class="wp-meta">2026-03-23 ~ 2026-03-30 · 오늘자 운영 기록 sync와 closeout 메모 반영</div></div></div>
+      <div class="row"><a class="wp-id" href="https://project.kstarmusic.com/work_packages/143" target="_blank">#143</a><div class="wp-body"><div class="wp-title">Sprint MVP-2 (03.23~03.29): Phase 6/7 closeout + bootstrap/auth hardening</div><div class="wp-meta">2026-03-23 ~ 2026-03-30 · 오늘자 closeout 메모, bootstrap hardening, admin session sync 반영</div></div></div>
     </div>
   </section>
 
@@ -413,16 +413,16 @@ code{
       <div class="sprint-card">
         <h3>종합 평가 코멘트</h3>
         <ul class="list">
-          <li>Phase 0부터 Phase 7까지 strict close 판정은 유지되고, 오늘자 변화는 closeout 메모와 운영 기록을 같은 언어로 맞춘 마감 성격이 강했다.</li>
-          <li>다음 관심사는 승인된 backlog와 empty DB bootstrap 기술부채를 현재 strict close 상태를 깨지 않는 방식으로 분리하는 일이다.</li>
-          <li>브라우저 sweep 기준 운영 blocker는 없었고, 남은 공용 partial 1건도 phase reopen 사유는 아니다.</li>
+          <li>Phase 0부터 Phase 7까지 strict close 판정은 유지되고, 오늘자 변화는 empty DB bootstrap hardening과 admin session closeout까지 포함한 운영 신뢰도 보강에 집중됐다.</li>
+          <li>다음 관심사는 승인된 backlog 정리와 회귀 검증 주기, OpenProject/Pages closeout 문구를 같은 톤으로 유지하는 일이다.</li>
+          <li>브라우저 sweep 기준 운영 blocker는 없고, 공용 partial도 0이 됐다.</li>
         </ul>
       </div>
     </div>
   </section>
 
   <div class="footer">
-    기준 데이터: OpenProject project 5 / docs/porting/progress/PROGRESS.md / docs/porting/audits/manual-findings.json / git commit 855d028
+    기준 데이터: OpenProject project 5 / docs/porting/progress/PROGRESS.md / docs/porting/audits/manual-findings.json / app git commit ae905bc
   </div>
 </div>
 
