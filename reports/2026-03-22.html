@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KStarMusic Store — 2026-03-22 Phase 0 board admin rail 진행 현황</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+:root{
+  --bg:#f5f4f0;
+  --surface:#ffffff;
+  --surface-alt:#efeee8;
+  --text:#181818;
+  --text-2:#5f5f5a;
+  --text-3:#96968d;
+  --border:rgba(0,0,0,.07);
+  --shadow:0 1px 3px rgba(0,0,0,.05);
+  --blue:#2563eb;
+  --blue-bg:#eff6ff;
+  --blue-t:#1d4ed8;
+  --green:#16a34a;
+  --green-bg:#f0fdf4;
+  --green-t:#15803d;
+  --amber:#d97706;
+  --amber-bg:#fffbeb;
+  --amber-t:#92400e;
+  --gray:#64748b;
+  --gray-bg:#f3f4f6;
+  --gray-t:#475569;
+  --red:#dc2626;
+  --red-bg:#fef2f2;
+  --red-t:#991b1b;
+  --r:12px;
+  --rl:16px;
+}
+@media (prefers-color-scheme: dark) {
+  :root{
+    --bg:#101010;
+    --surface:#1a1a1a;
+    --surface-alt:#242424;
+    --text:#ebebeb;
+    --text-2:#b5b5ae;
+    --text-3:#7a7a73;
+    --border:rgba(255,255,255,.08);
+    --shadow:0 1px 3px rgba(0,0,0,.32);
+    --blue-bg:#162441;
+    --blue-t:#93c5fd;
+    --green-bg:#0b2f17;
+    --green-t:#86efac;
+    --amber-bg:#3a2507;
+    --amber-t:#fcd34d;
+    --gray-bg:#2b2b2b;
+    --gray-t:#d1d5db;
+    --red-bg:#450a0a;
+    --red-t:#fca5a5;
+  }
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:'Pretendard',-apple-system,BlinkMacSystemFont,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:inherit}
+code{
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:.95em;
+}
+.wrap{max-width:1120px;margin:0 auto;padding:2rem 1.5rem 4rem}
+.back{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:.78rem;font-weight:600;color:var(--text-2);
+  text-decoration:none;margin-bottom:1rem;
+}
+.hero{
+  display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;flex-wrap:wrap;
+  margin-bottom:1.5rem;
+}
+.hero h1{font-size:1.6rem;letter-spacing:-.03em}
+.hero p{font-size:.88rem;color:var(--text-2);margin-top:6px;max-width:760px}
+.pill{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:6px 12px;border-radius:999px;border:1px solid var(--border);
+  background:var(--surface);font-size:.74rem;color:var(--text-2);font-weight:600;
+}
+.metrics{
+  display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px;margin-bottom:1.6rem;
+}
+.metric,.card,.chart-box,.timeline,.sprint-card{
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--shadow);
+}
+.metric{padding:.95rem 1rem}
+.metric .label{font-size:.68rem;color:var(--text-3);text-transform:uppercase;letter-spacing:.05em}
+.metric .value{font-size:1.65rem;font-weight:700;letter-spacing:-.03em;margin-top:4px}
+.metric .sub{font-size:.73rem;color:var(--text-2);margin-top:4px}
+.sec{margin-bottom:1.5rem}
+.sec-h{display:flex;align-items:center;gap:8px;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--blue)}
+.sec-t{font-size:.92rem;font-weight:700}
+.sec-r{margin-left:auto;font-size:.74rem;color:var(--text-3)}
+.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.card{padding:1rem}
+.callout{
+  border-left:4px solid var(--blue);
+  padding:.95rem 1rem;
+  background:linear-gradient(180deg,var(--surface),var(--surface-alt));
+}
+.callout h3{font-size:.92rem;margin-bottom:8px}
+.callout p,.callout li,.table td,.table th,.card p,.note{font-size:.8rem}
+.list{padding-left:1rem}
+.list li{margin:.2rem 0}
+.badge{
+  display:inline-flex;align-items:center;padding:3px 8px;border-radius:999px;
+  font-size:.67rem;font-weight:700;white-space:nowrap
+}
+.b-done{background:var(--green-bg);color:var(--green-t)}
+.b-progress{background:var(--blue-bg);color:var(--blue-t)}
+.b-waiting{background:var(--gray-bg);color:var(--gray-t)}
+.b-backlog{background:var(--amber-bg);color:var(--amber-t)}
+.b-risk{background:var(--red-bg);color:var(--red-t)}
+.phase-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.phase-card{padding:1rem}
+.phase-head{display:flex;justify-content:space-between;gap:8px;align-items:flex-start;margin-bottom:8px}
+.phase-code{font-size:.72rem;font-weight:700;color:var(--blue)}
+.phase-topic{font-size:.85rem;font-weight:700;margin-top:2px}
+.phase-desc{font-size:.78rem;color:var(--text-2)}
+.chart-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.chart-box{padding:1rem}
+.chart-box h3{font-size:.85rem;margin-bottom:10px}
+.chart-wrap{position:relative;height:280px}
+.timeline{padding:1rem}
+.timeline-row{display:grid;grid-template-columns:180px 1fr 120px;gap:12px;align-items:center;margin:.65rem 0}
+.tl-title{font-size:.8rem;font-weight:600}
+.tl-bar{height:12px;border-radius:999px;background:var(--surface-alt);position:relative;overflow:hidden}
+.tl-fill{position:absolute;top:0;bottom:0;border-radius:999px}
+.table{width:100%;border-collapse:collapse}
+.table th,.table td{padding:.75rem .6rem;text-align:left;border-bottom:1px solid var(--border);vertical-align:top}
+.table th{font-size:.72rem;color:var(--text-3);text-transform:uppercase;letter-spacing:.04em}
+.progress-row{margin-bottom:.9rem}
+.progress-meta{display:flex;justify-content:space-between;gap:8px;font-size:.78rem;margin-bottom:6px}
+.progress-track{height:8px;border-radius:999px;background:var(--surface-alt);overflow:hidden}
+.progress-fill{height:100%;border-radius:999px}
+.wp-list .row{display:flex;gap:8px;align-items:flex-start;margin-bottom:.7rem}
+.wp-id{min-width:56px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--blue);text-decoration:none;font-size:.75rem;font-weight:700}
+.wp-body{flex:1}
+.wp-title{font-size:.82rem;font-weight:600}
+.wp-meta{font-size:.74rem;color:var(--text-2)}
+.footer{margin-top:2rem;padding-top:1rem;border-top:1px solid var(--border);font-size:.72rem;color:var(--text-3)}
+@media (max-width:960px){
+  .metrics{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .phase-grid,.cards,.chart-grid{grid-template-columns:1fr}
+  .timeline-row{grid-template-columns:1fr}
+}
+@media (max-width:560px){
+  .wrap{padding:1.2rem .95rem 3rem}
+  .metrics{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .hero h1{font-size:1.3rem}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="../">← 보고서 목록으로 돌아가기</a>
+
+  <div class="hero">
+    <div>
+      <h1>KStarMusic Store<small style="display:block;font-size:.92rem;font-weight:500;color:var(--text-2);margin-top:6px">2026-03-22 (일) Phase 0 board admin rail 진행 현황</small></h1>
+      <p>기준일인 <strong>2026-03-22</strong>에는 OpenProject 장부 변경이 없었지만, git/progress 기준으로는 Phase 0 게시판 strict audit 착수와 Phase 7 closeout 문서화가 동시에 진행됐다. 이 보고서는 WBS snapshot과 실제 코드/감사 장부 차이를 함께 보여주는 코드 중심 보강 보고서다.</p>
+    </div>
+    <div class="pill">프로젝트 시작일 2026-03-06 · OpenProject + git + PROGRESS 기준</div>
+  </div>
+
+  <div class="metrics">
+    <div class="metric"><div class="label">전체 작업</div><div class="value">129</div><div class="sub">Task 97 · Summary 20 · Milestone 12</div></div>
+    <div class="metric"><div class="label">완료</div><div class="value">51</div><div class="sub">39.5% · WBS 상태 기준</div></div>
+    <div class="metric"><div class="label">진행 중</div><div class="value">8</div><div class="sub">P0 5건 · 로드맵 3건</div></div>
+    <div class="metric"><div class="label">대기</div><div class="value">59</div><div class="sub">MVP-2 이후 스프린트 예약분 포함</div></div>
+    <div class="metric"><div class="label">기각</div><div class="value">11</div><div class="sub">범위 외 또는 대체 경로로 정리</div></div>
+    <div class="metric"><div class="label">최근 변경</div><div class="value">0</div><div class="sub">03/21~03/22 OpenProject 0건 · git 5커밋</div></div>
+  </div>
+
+  <section class="sec">
+    <div class="sec-h"><span class="dot"></span><div class="sec-t">오늘 핵심 요약</div></div>
+    <div class="cards">
+      <div class="card callout">
+        <h3>Phase 0 board strict audit 착수</h3>
+        <ul class="list">
+          <li><code>/manage/boards/layout</code>을 레거시 top rail 우선 구조로 재정렬하고 <code>/manage/boards/polls</code>, <code>/manage/boards/writer-name</code> dedicated rail을 열었다.</li>
+          <li>root <code>/manage/boards</code>를 <code>/manage/boards/posts</code> canonical list로 다시 묶고, posts page에 상세 dialog와 등록/수정 dialog를 추가했다.</li>
+          <li><code>/manage/boards/settings</code>에 <code>게시판 추가항목 설정</code>, <code>게시판 상단 디자인</code>, <code>상단 이미지 업로드</code>, <code>HTML 미리보기</code>를 붙여 <code>board_temp</code>, <code>board_top/file</code> depth를 current rail 안으로 병합했다.</li>
+          <li>같은 posts rail에 <code>엑셀 다운로드</code>, 댓글/신고 handoff, <code>post_id</code> 기준 filter rail을 추가해 남은 gap을 <code>content_write.addinfo/cate</code> helper depth 하나로 좁혔다.</li>
+        </ul>
+      </div>
+      <div class="card callout" style="border-left-color:var(--amber)">
+        <h3>Phase 7 closeout과 WBS sync gap</h3>
+        <ul class="list">
+          <li><code>MarketplaceSyncService.dispatch_transport</code> actual transport adapter 조각이 landed했고, <code>PROGRESS.md</code>와 Phase 7 tracker는 strict gap <code>0</code>으로 올라갔다.</li>
+          <li><code>manual-findings.json</code> 기준 Phase 7은 <code>replaced/ported/excluded-approved</code>만 남았고 partial/missing surface가 없다.</li>
+          <li>반면 OpenProject 최신 <code>updatedAt</code>는 여전히 <strong>2026-03-20</strong>이라, 이번 Pages 리포트는 코드와 감사 장부가 WBS를 앞서간 상태를 명시적으로 기록한다.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="sec-h"><span class="dot"></span><div class="sec-t">전체 포팅 Phase 현황</div><div class="sec-r">PROGRESS.md 2026-03-22 기준</div></div>
+    <div class="phase-grid">
+      <div class="card phase-card"><div class="phase-head"><div><div class="phase-code">Phase 0</div><div class="phase-topic">게시판 운영</div></div><span class="badge b-progress">kickoff audit</span></div><div class="phase-desc">board shell/directness, polls/writer, settings/posts helper slice가 landed했고 남은 핵심 gap은 <code>content_write.addinfo/cate</code>다.</div></div>
+      <div class="card phase-card"><div class="phase-head"><div><div class="phase-code">Phase 1</div><div class="phase-topic">주문/결제 운영</div></div><span class="badge b-done">strict closeout 완료</span></div><div class="phase-desc">order-manage shell/directness는 닫혔고 남은 차이는 승인된 BANK/NTS breadth backlog만 유지한다.</div></div>
+      <div class="card phase-card"><div class="phase-head"><div><div class="phase-code">Phase 2</div><div class="phase-topic">상품 관리</div></div><span class="badge b-backlog">QA backlog</span></div><div class="phase-desc">운영 blocker는 해소됐고 남은 차이는 QA/backlog로만 관리한다.</div></div>
+      <div class="card phase-card"><div class="phase-head"><div><div class="phase-code">Phase 3</div><div class="phase-topic">고객 운영/CRM</div></div><span class="badge b-done">close 완료</span></div><div class="phase-desc">strict gap 0 상태이며 QA polish와 후속 phase 이관 항목만 남아 있다.</div></div>
+      <div class="card phase-card"><div class="phase-head"><div><div class="phase-code">Phase 4</div><div class="phase-topic">재고/ERP/창고</div></div><span class="badge b-done">close 완료</span></div><div class="phase-desc">발주/입고, 바코드, 재고/창고, ERP 설정군까지 current canonical rail로 닫혔고 남은 차이는 QA polish뿐이다.</div></div>
+      <div class="card phase-card"><div class="phase-head"><div><div class="phase-code">Phase 5</div><div class="phase-topic">프로모션/매출 분석</div></div><span class="badge b-done">close 완료</span></div><div class="phase-desc">coupon/attendance/event/time-sale/admin log breadth가 정리돼 strict gap 0 상태를 유지한다.</div></div>
+      <div class="card phase-card"><div class="phase-head"><div><div class="phase-code">Phase 6</div><div class="phase-topic">내부 운영/회원 정책</div></div><span class="badge b-progress">kickoff audit</span></div><div class="phase-desc">departments, member policy/group, messaging, email, banner, popup, keyword log breadth가 복원됐고 현재는 wording/polish follow-up 비중이 크다.</div></div>
+      <div class="card phase-card"><div class="phase-head"><div><div class="phase-code">Phase 7</div><div class="phase-topic">파트너/벤더/외부 연동</div></div><span class="badge b-done">close 완료</span></div><div class="phase-desc">vendor/subscription/openmarket/live transport rail이 닫혔고 strict gap 0 이후에는 QA wording/polish와 운영 동기화만 유지한다.</div></div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="sec-h"><span class="dot"></span><div class="sec-t">상태 차트와 활동 추이</div></div>
+    <div class="chart-grid">
+      <div class="chart-box">
+        <h3>상태별 분포</h3>
+        <div class="chart-wrap"><canvas id="statusChart"></canvas></div>
+      </div>
+      <div class="chart-box">
+        <h3>주간별 변경량</h3>
+        <div class="chart-wrap"><canvas id="activityChart"></canvas></div>
+      </div>
+    </div>
+    <div class="chart-box" style="margin-top:12px">
+      <h3>일자별 활동 추이</h3>
+      <div class="chart-wrap"><canvas id="trendChart"></canvas></div>
+      <p class="note" style="margin-top:8px;color:var(--text-2)">03/21~03/22 선이 평평한 이유는 작업 중단이 아니라 OpenProject sync lag 때문이다. 같은 기간 git/progress에서는 Phase 0 board strict audit과 Phase 7 closeout 문서화가 계속 진행됐다.</p>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="sec-h"><span class="dot"></span><div class="sec-t">전체 로드맵 타임라인</div></div>
+    <div class="timeline">
+      <div class="timeline-row">
+        <div class="tl-title">Sprint P0 백오피스 포팅</div>
+        <div class="tl-bar"><div class="tl-fill" style="left:0;width:58%;background:var(--blue)"></div></div>
+        <div class="note">03/10 ~ 03/30</div>
+      </div>
+      <div class="timeline-row">
+        <div class="tl-title">Sprint MVP-1 wrap-up</div>
+        <div class="tl-bar"><div class="tl-fill" style="left:22%;width:16%;background:var(--blue)"></div></div>
+        <div class="note">03/16 ~ 03/23</div>
+      </div>
+      <div class="timeline-row">
+        <div class="tl-title">Phase 0 board rail deepening</div>
+        <div class="tl-bar"><div class="tl-fill" style="left:37%;width:16%;background:var(--blue)"></div></div>
+        <div class="note">03/22 kickoff</div>
+      </div>
+      <div class="timeline-row">
+        <div class="tl-title">Phase 6 QA wording/polish</div>
+        <div class="tl-bar"><div class="tl-fill" style="left:37%;width:14%;background:var(--amber)"></div></div>
+        <div class="note">follow-up</div>
+      </div>
+      <div class="timeline-row">
+        <div class="tl-title">Phase 7 closeout sync</div>
+        <div class="tl-bar"><div class="tl-fill" style="left:34%;width:8%;background:var(--green)"></div></div>
+        <div class="note">strict gap 0</div>
+      </div>
+      <div class="timeline-row">
+        <div class="tl-title">Sprint MVP-2 kickoff</div>
+        <div class="tl-bar"><div class="tl-fill" style="left:40%;width:16%;background:var(--gray)"></div></div>
+        <div class="note">03/23 ~ 03/30</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="sec-h"><span class="dot"></span><div class="sec-t">감사/검증 진행률</div></div>
+    <div class="cards">
+      <div class="card">
+        <div class="progress-row">
+          <div class="progress-meta"><span>route + surface parity ledger</span><strong>207 / 209</strong></div>
+          <div class="progress-track"><div class="progress-fill" style="width:99%;background:var(--green)"></div></div>
+        </div>
+        <p class="note" style="color:var(--text-2)">현재 장부에서 미닫힘으로 남은 항목은 <code>board@content_list</code>, <code>shared@manage.header</code> 두 개뿐이다. 나머지 207개는 <code>merged</code>, <code>ported</code>, <code>replaced</code>, <code>excluded-approved</code> 상태다.</p>
+      </div>
+      <div class="card">
+        <div class="progress-row">
+          <div class="progress-meta"><span>Phase 0 board kickoff surface</span><strong>10 / 11</strong></div>
+          <div class="progress-track"><div class="progress-fill" style="width:91%;background:var(--blue)"></div></div>
+        </div>
+        <p class="note" style="color:var(--text-2)"><code>board_config</code>, <code>board_new_list</code>, <code>board_temp</code>, <code>board_top/file</code>, <code>board_trash</code>, <code>poll_list</code>, <code>writer_name</code>, <code>board_comment</code>, <code>board_excel.exe</code>는 닫혔고 남은 건 board-specific write helper depth 하나다.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="sec-h"><span class="dot"></span><div class="sec-t">스프린트별 진척률</div></div>
+    <div class="cards">
+      <div class="sprint-card card">
+        <div class="progress-meta"><strong>Sprint P0</strong><span>03/10 ~ 03/30</span></div>
+        <div class="progress-track"><div class="progress-fill" style="width:22.2%;background:var(--blue)"></div></div>
+        <p class="note" style="margin-top:8px;color:var(--text-2)">하위 9개 중 2개가 Closed 상태다. 03/22 코드/문서 전진이 아직 OpenProject child status에 반영되지 않아 체감보다 낮게 보인다.</p>
+      </div>
+      <div class="sprint-card card">
+        <div class="progress-meta"><strong>쇼핑몰 MVP 로드맵</strong><span>03/16 ~ 04/27</span></div>
+        <div class="progress-track"><div class="progress-fill" style="width:10.7%;background:var(--green)"></div></div>
+        <p class="note" style="margin-top:8px;color:var(--text-2)">장기 summary task라 퍼센트는 낮지만, 현재 active child는 <code>#139</code> MVP-1이고 다음 배치는 <code>#143</code> MVP-2다.</p>
+      </div>
+      <div class="sprint-card card">
+        <div class="progress-meta"><strong>Sprint MVP-1</strong><span>03/16 ~ 03/23</span></div>
+        <div class="progress-track"><div class="progress-fill" style="width:66.7%;background:var(--green)"></div></div>
+        <p class="note" style="margin-top:8px;color:var(--text-2)"><code>#140</code>, <code>#141</code> 두 task가 Closed고, milestone <code>#142</code>만 아직 New 상태다.</p>
+      </div>
+      <div class="sprint-card card">
+        <div class="progress-meta"><strong>Sprint MVP-2</strong><span>03/23 ~ 03/30</span></div>
+        <div class="progress-track"><div class="progress-fill" style="width:33.3%;background:var(--amber)"></div></div>
+        <p class="note" style="margin-top:8px;color:var(--text-2)">summary task는 아직 New지만 child <code>#145</code>가 먼저 Closed라, kickoff 전 선반영된 항목이 존재한다.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="sec-h"><span class="dot"></span><div class="sec-t">일정 변경 이력</div><div class="sec-r">2026-03-21 ~ 2026-03-22</div></div>
+    <div class="card">
+      <table class="table">
+        <thead><tr><th>WP</th><th>작업명</th><th>변경 전</th><th>변경 후</th><th>사유</th></tr></thead>
+        <tbody>
+          <tr><td colspan="5" style="color:var(--text-2)">OpenProject 기준으로는 이 기간의 날짜/상태 변경 이력이 없다. 이번 보고서의 특이사항은 WBS가 아니라 git + PROGRESS + manual-findings가 먼저 전진했다는 점이다.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="sec-h"><span class="dot"></span><div class="sec-t">리스크 &amp; 주의사항</div></div>
+    <div class="cards">
+      <div class="card callout" style="border-left-color:var(--red)">
+        <h3>WBS 동기화 지연</h3>
+        <p>OpenProject 최신 변경 시점이 <strong>2026-03-20</strong>에 머물러 있어, 03/22의 board strict audit 착수와 Phase 7 close 문구가 WBS 카드에는 아직 드러나지 않는다. Pages 보고서에서 먼저 기록해 두고 후속으로 OpenProject 문구 동기화가 필요하다.</p>
+      </div>
+      <div class="card callout" style="border-left-color:var(--amber)">
+        <h3>Phase 0 마지막 partial</h3>
+        <p><code>board@content_list</code>는 list/detail/write/export/comment/report rail까지 current path로 올라왔지만, <code>content_write.addinfo.exe</code>, <code>content_write.cate.exe</code> 성격의 board-specific write helper가 아직 남아 있다.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="sec-h"><span class="dot"></span><div class="sec-t">현재 진행 중인 작업</div></div>
+    <div class="card wp-list">
+      <div class="row"><a class="wp-id" href="https://project.kstarmusic.com/work_packages/126" target="_blank">#126</a><div class="wp-body"><div class="wp-title">Sprint P0: 뮤직플랜트 백오피스 포팅 <span class="badge b-progress">In progress</span></div><div class="wp-meta">03/22 코드 기준으로 Phase 0 board strict audit 착수와 Phase 7 close sync까지 범위를 다시 정렬한 메인 모선이다.</div></div></div>
+      <div class="row"><a class="wp-id" href="https://project.kstarmusic.com/work_packages/128" target="_blank">#128</a><div class="wp-body"><div class="wp-title">포팅 대상 DB 스키마/API 매핑 설계 <span class="badge b-progress">In progress</span></div><div class="wp-meta">Phase 0~7 전체 canonical domain 기준을 유지하는 설계 문서 역할을 계속 수행한다.</div></div></div>
+      <div class="row"><a class="wp-id" href="https://project.kstarmusic.com/work_packages/129" target="_blank">#129</a><div class="wp-body"><div class="wp-title">상품 관리 화면 포팅 <span class="badge b-progress">In progress</span></div><div class="wp-meta">운영 blocker는 이미 닫혔고 현재는 Phase 2 QA/backlog 성격으로 유지된다.</div></div></div>
+      <div class="row"><a class="wp-id" href="https://project.kstarmusic.com/work_packages/131" target="_blank">#131</a><div class="wp-body"><div class="wp-title">회원 관리 + 정산 화면 포팅 <span class="badge b-progress">In progress</span></div><div class="wp-meta">Phase 3 close 이후 설정/정책계열과의 경계 정리 및 후행 breadth 이관 항목만 남아 있다.</div></div></div>
+      <div class="row"><a class="wp-id" href="https://project.kstarmusic.com/work_packages/133" target="_blank">#133</a><div class="wp-body"><div class="wp-title">설정/환경 관리 포팅 <span class="badge b-progress">In progress</span></div><div class="wp-meta">Phase 6 wording/polish follow-up과 Phase 7 설정군 운영 동기화가 이어질 수 있는 공통 모듈이다.</div></div></div>
+      <div class="row"><a class="wp-id" href="https://project.kstarmusic.com/work_packages/134" target="_blank">#134</a><div class="wp-body"><div class="wp-title">포팅 통합 테스트 + 데이터 검증 <span class="badge b-progress">In progress</span></div><div class="wp-meta">OpenProject updatedAt은 03/20에 멈췄지만, 03/22 기준 tracker/progress에는 board admin rails 증거와 manual-findings 재판정이 추가됐다.</div></div></div>
+      <div class="row"><a class="wp-id" href="https://project.kstarmusic.com/work_packages/138" target="_blank">#138</a><div class="wp-body"><div class="wp-title">쇼핑몰 MVP + 운영/앱 출시 일정 <span class="badge b-progress">In progress</span></div><div class="wp-meta">전체 릴리즈 타임라인 summary task로, 현재 active child는 MVP-1이고 다음은 MVP-2다.</div></div></div>
+      <div class="row"><a class="wp-id" href="https://project.kstarmusic.com/work_packages/139" target="_blank">#139</a><div class="wp-body"><div class="wp-title">Sprint MVP-1 (03.17~03.22): Phase 2 핵심 마감 <span class="badge b-progress">In progress</span></div><div class="wp-meta">summary는 아직 In progress지만 child 기준으로는 2/3이 이미 닫혀 MVP-2 handoff 직전 상태다.</div></div></div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="sec-h"><span class="dot"></span><div class="sec-t">최근 완료된 작업</div></div>
+    <div class="card wp-list">
+      <div class="row"><div class="wp-body"><div class="wp-title">해당 없음 <span class="badge b-waiting">No Closed items</span></div><div class="wp-meta">OpenProject 기준 2026-03-21~2026-03-22 사이 Closed 전환은 없었다. 다만 코드 기준으로는 Phase 7 closeout 조각이 landed했고, WBS 상태 갱신은 후행 동기화 항목이다.</div></div></div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="sec-h"><span class="dot"></span><div class="sec-t">스프린트별 상세 현황</div></div>
+    <div class="cards">
+      <div class="card wp-list">
+        <div class="progress-meta"><strong>Sprint P0</strong><span>#126</span></div>
+        <div class="row"><a class="wp-id" href="https://project.kstarmusic.com/work_packages/127" target="_blank">#127</a><div class="wp-body"><div class="wp-title">뮤직플랜트 백오피스 현행 분석 및 기능 목록 정리 <span class="badge b-done">Closed</span></div><div class="wp-meta">현행 inventory 재독 완료.</div></div></div>
+        <div class="row"><a class="wp-id" href="https://project.kstarmusic.com/work_packages/128" target="_blank">#128</a><div class="wp-body"><div class="wp-title">포팅 대상 DB 스키마/API 매핑 설계 <span class="badge b-progress">In progress</span></div><div class="wp-meta">Phase 공통 설계 기준.</div></div></div>
+        <div class="row"><a class="wp-id" href="https://project.kstarmusic.com/work_packages/129" target="_blank">#129</a><div class="wp-body"><div class="wp-title">상품 관리 화면 포팅 <span class="badge b-progress">In progress</span></div><div class="wp-meta">QA/backlog 위주 유지.</div></div></div>
+        <div class="row"><a class="wp-id" href="https://project.kstarmusic.com/work_packages/130" target="_blank">#130</a><div class="wp-body"><div class="wp-title">주문/배송 관리 화면 포팅 <span class="badge b-done">Closed</span></div><div class="wp-meta">Phase 1 strict closeout 완료.</div></div></div>
+        <div class="row"><a class="wp-id" href="https://project.kstarmusic.com/work_packages/131" target="_blank">#131</a><div class="wp-body"><div class="wp-title">회원 관리 + 정산 화면 포팅 <span class="badge b-progress">In progress</span></div><div class="wp-meta">후속 breadth 이관 유지.</div></div></div>
+        <div class="row"><a class="wp-id" href="https://project.kstarmusic.com/work_packages/132" target="_blank">#132</a><div class="wp-body"><div class="wp-title">콘텐츠/배너/이벤트 관리 포팅 <span class="badge b-waiting">New</span></div><div class="wp-meta">WBS에는 아직 New지만, 실제 코드는 Phase 0/5/6/7로 세분화됐다.</div></div></div>
+        <div class="row"><a class="wp-id" href="https://project.kstarmusic.com/work_packages/133" target="_blank">#133</a><div class="wp-body"><div class="wp-title">설정/환경 관리 포팅 <span class="badge b-progress">In progress</span></div><div class="wp-meta">Phase 6~7 설정군 유지.</div></div></div>
+        <div class="row"><a class="wp-id" href="https://project.kstarmusic.com/work_packages/134" target="_blank">#134</a><div class="wp-body"><div class="wp-title">포팅 통합 테스트 + 데이터 검증 <span class="badge b-progress">In progress</span></div><div class="wp-meta">실데이터/브라우저 검증 기준.</div></div></div>
+        <div class="row"><a class="wp-id" href="https://project.kstarmusic.com/work_packages/135" target="_blank">#135</a><div class="wp-body"><div class="wp-title">P0 완료: 뮤직플랜트 백오피스 포팅 <span class="badge b-waiting">New</span></div><div class="wp-meta">최종 milestone은 아직 미오픈 상태다.</div></div></div>
+      </div>
+
+      <div class="card wp-list">
+        <div class="progress-meta"><strong>Sprint MVP-1</strong><span>#139</span></div>
+        <div class="row"><a class="wp-id" href="https://project.kstarmusic.com/work_packages/140" target="_blank">#140</a><div class="wp-body"><div class="wp-title">Phase 2 상품 편집 메타데이터 통합 마감 <span class="badge b-done">Closed</span></div><div class="wp-meta">03/16~03/23 범위에서 완료.</div></div></div>
+        <div class="row"><a class="wp-id" href="https://project.kstarmusic.com/work_packages/141" target="_blank">#141</a><div class="wp-body"><div class="wp-title">Phase 2 업로드/가격 이력/브라우저 E2E 닫기 <span class="badge b-done">Closed</span></div><div class="wp-meta">브라우저 E2E 포함 closeout 완료.</div></div></div>
+        <div class="row"><a class="wp-id" href="https://project.kstarmusic.com/work_packages/142" target="_blank">#142</a><div class="wp-body"><div class="wp-title">MVP-1 완료: Phase 2 핵심 마감 <span class="badge b-waiting">New</span></div><div class="wp-meta">milestone state만 남아 있다.</div></div></div>
+      </div>
+
+      <div class="card wp-list">
+        <div class="progress-meta"><strong>Sprint MVP-2</strong><span>#143</span></div>
+        <div class="row"><a class="wp-id" href="https://project.kstarmusic.com/work_packages/144" target="_blank">#144</a><div class="wp-body"><div class="wp-title">Phase 2 재감사 완료 및 상품 운영 회귀 마감 <span class="badge b-waiting">New</span></div><div class="wp-meta">다음 우선순위 candidate.</div></div></div>
+        <div class="row"><a class="wp-id" href="https://project.kstarmusic.com/work_packages/145" target="_blank">#145</a><div class="wp-body"><div class="wp-title">Phase 3 최소 오픈 범위 마감 <span class="badge b-done">Closed</span></div><div class="wp-meta">child는 먼저 닫혔지만 summary task는 아직 New다.</div></div></div>
+        <div class="row"><a class="wp-id" href="https://project.kstarmusic.com/work_packages/146" target="_blank">#146</a><div class="wp-body"><div class="wp-title">MVP-2 완료: 상품/고객 최소범위 마감 <span class="badge b-waiting">New</span></div><div class="wp-meta">kickoff 이후 상태 정렬 필요.</div></div></div>
+      </div>
+
+      <div class="card wp-list">
+        <div class="progress-meta"><strong>전체 출시 일정</strong><span>#138</span></div>
+        <div class="row"><a class="wp-id" href="https://project.kstarmusic.com/work_packages/139" target="_blank">#139</a><div class="wp-body"><div class="wp-title">Sprint MVP-1 <span class="badge b-progress">In progress</span></div><div class="wp-meta">현 active sprint.</div></div></div>
+        <div class="row"><a class="wp-id" href="https://project.kstarmusic.com/work_packages/143" target="_blank">#143</a><div class="wp-body"><div class="wp-title">Sprint MVP-2 <span class="badge b-waiting">New</span></div><div class="wp-meta">03/23 시작 예정.</div></div></div>
+        <div class="row"><a class="wp-id" href="https://project.kstarmusic.com/work_packages/147" target="_blank">#147</a><div class="wp-body"><div class="wp-title">Sprint MVP-3 <span class="badge b-waiting">New</span></div><div class="wp-meta">컷오버 리허설.</div></div></div>
+        <div class="row"><a class="wp-id" href="https://project.kstarmusic.com/work_packages/151" target="_blank">#151</a><div class="wp-body"><div class="wp-title">Sprint MVP-4 <span class="badge b-waiting">New</span></div><div class="wp-meta">UAT + 하드닝 + 프리즈.</div></div></div>
+        <div class="row"><a class="wp-id" href="https://project.kstarmusic.com/work_packages/158" target="_blank">#158</a><div class="wp-body"><div class="wp-title">Sprint MVP-5 <span class="badge b-waiting">New</span></div><div class="wp-meta">Expo 배포 준비 + 스토어 제출.</div></div></div>
+        <div class="row"><a class="wp-id" href="https://project.kstarmusic.com/work_packages/162" target="_blank">#162</a><div class="wp-body"><div class="wp-title">Sprint MVP-6 <span class="badge b-waiting">New</span></div><div class="wp-meta">심사 대응 + 운영 전환 안정화.</div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="sec-h"><span class="dot"></span><div class="sec-t">오늘의 코드 진행 메모</div></div>
+    <div class="cards">
+      <div class="card">
+        <h3 style="font-size:.86rem;margin-bottom:8px">git 기준 03/22 landed slice</h3>
+        <ul class="list">
+          <li><code>0de833e</code>: Phase 7 actual transport adapter rail closeout</li>
+          <li><code>e6eb47a</code>: board kickoff audit, top rail 재정렬, polls/writer dedicated page 추가</li>
+          <li><code>14393af</code>: board route findings draft, root posts canonical path 정리</li>
+          <li><code>b2b7e1c</code>: board posts detail/write dialog 추가</li>
+          <li><code>eeacd6f</code>: board settings merged depth, comment/report/export helper 흡수</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3 style="font-size:.86rem;margin-bottom:8px">증거와 문서 동기화</h3>
+        <ul class="list">
+          <li><code>docs/porting/progress/PROGRESS.md</code>, <code>phase-0-tracker.md</code>, <code>phase-7-tracker.md</code>가 03/22 문구로 같이 올라갔다.</li>
+          <li><code>docs/porting/audits/manual-findings.json</code>은 Phase 0 board surfaces와 Phase 7 strict gap 0 판정을 반영했다.</li>
+          <li><code>fastapi_backend/tests/test_board_admin_content_api.py</code>가 추가돼 board admin content helper contract를 보강했다.</li>
+          <li><code>DailyReport.md</code>에도 Phase 0 board slice 작성 규칙이 보강돼 이후 Pages 보고서 템플릿 근거가 늘었다.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="sec-h"><span class="dot"></span><div class="sec-t">다음 작업</div></div>
+    <div class="card">
+      <ul class="list">
+        <li>OpenProject에 03/22 board strict audit과 Phase 7 close 문구를 동기화해 WBS lag를 줄인다.</li>
+        <li>Phase 0 posts editor에 <code>content_write.addinfo.exe</code>, <code>content_write.cate.exe</code> 성격을 연결해 마지막 partial을 줄인다.</li>
+        <li>Phase 6 wording/polish follow-up과 Git Pages/OpenProject 운영 마감 sync를 이어간다.</li>
+      </ul>
+    </div>
+  </section>
+
+  <div class="footer">
+    KStarMusic Store Project Dashboard · OpenProject / git log / PROGRESS / manual-findings 기준 동기화
+  </div>
+</div>
+
+<script>
+const statusChart = new Chart(document.getElementById('statusChart'), {
+  type: 'doughnut',
+  data: {
+    labels: ['Closed', 'In progress', 'New', 'Rejected'],
+    datasets: [{
+      data: [51, 8, 59, 11],
+      backgroundColor: ['#16A34A', '#2563EB', '#94A3B8', '#DC2626'],
+      borderWidth: 0
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { position: 'bottom' } }
+  }
+});
+
+const activityChart = new Chart(document.getElementById('activityChart'), {
+  type: 'bar',
+  data: {
+    labels: ['03/17', '03/18', '03/19', '03/20', '03/21', '03/22'],
+    datasets: [
+      { label: '생성', data: [0, 0, 0, 0, 0, 0], backgroundColor: '#60A5FA' },
+      { label: '수정', data: [4, 0, 4, 2, 0, 0], backgroundColor: '#FBBF24' },
+      { label: '완료', data: [0, 0, 1, 1, 0, 0], backgroundColor: '#34D399' }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { position: 'bottom' } },
+    scales: { y: { beginAtZero: true } }
+  }
+});
+
+const trendChart = new Chart(document.getElementById('trendChart'), {
+  type: 'line',
+  data: {
+    labels: ['03/16', '03/17', '03/18', '03/19', '03/20', '03/21', '03/22'],
+    datasets: [
+      { label: '생성', data: [29, 0, 0, 0, 0, 0, 0], borderColor: '#60A5FA', backgroundColor: '#60A5FA', tension: .25 },
+      { label: '수정', data: [43, 4, 0, 4, 2, 0, 0], borderColor: '#FBBF24', backgroundColor: '#FBBF24', tension: .25 },
+      { label: '완료', data: [5, 0, 0, 1, 1, 0, 0], borderColor: '#34D399', backgroundColor: '#34D399', tension: .25 }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { position: 'bottom' } },
+    scales: { y: { beginAtZero: true } }
+  }
+});
+</script>
+</body>
+</html>
